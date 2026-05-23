@@ -14,16 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      invitations: {
+        Row: {
+          accepted_at: string | null
+          application: Database["public"]["Enums"]["app_name"]
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          status: Database["public"]["Enums"]["invitation_status"]
+        }
+        Insert: {
+          accepted_at?: string | null
+          application: Database["public"]["Enums"]["app_name"]
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["invitation_status"]
+        }
+        Update: {
+          accepted_at?: string | null
+          application?: Database["public"]["Enums"]["app_name"]
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["invitation_status"]
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          application: Database["public"]["Enums"]["app_name"]
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          application: Database["public"]["Enums"]["app_name"]
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          application?: Database["public"]["Enums"]["app_name"]
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_app_access: {
+        Args: {
+          _app: Database["public"]["Enums"]["app_name"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _app: Database["public"]["Enums"]["app_name"]
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_app_admin: {
+        Args: {
+          _app: Database["public"]["Enums"]["app_name"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_name: "AIDE" | "HANDICAP" | "CVEC"
+      app_role: "admin" | "partenaire" | "direction"
+      invitation_status: "pending" | "accepted" | "expired" | "revoked"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +256,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_name: ["AIDE", "HANDICAP", "CVEC"],
+      app_role: ["admin", "partenaire", "direction"],
+      invitation_status: ["pending", "accepted", "expired", "revoked"],
+    },
   },
 } as const
