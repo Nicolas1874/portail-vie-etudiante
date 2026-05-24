@@ -37,11 +37,16 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  // En production, ne jamais exposer le message d'erreur brut (peut contenir
+  // des détails internes : SQL, env vars, etc.). Logs complets côté serveur.
+  const safeMessage = import.meta.env.PROD
+    ? "Une erreur technique est survenue. L'équipe a été notifiée."
+    : error.message;
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold text-foreground">Une erreur est survenue</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{safeMessage}</p>
         <div className="mt-6 flex gap-2 justify-center">
           <button
             onClick={() => { router.invalidate(); reset(); }}
