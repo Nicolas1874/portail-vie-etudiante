@@ -62,7 +62,7 @@ export async function writeAuditLog(entry: AuditEntry): Promise<void> {
       target_id: entry.target_id ?? null,
       target_email: entry.target_email ?? null,
       application: entry.application ?? null,
-      details: entry.details ?? {},
+      details: (entry.details ?? {}) as never,
       ip_address: getClientIp(),
       user_agent: getUserAgent(),
     });
