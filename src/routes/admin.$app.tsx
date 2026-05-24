@@ -1,8 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth, type AppName, type AppRole } from "@/lib/auth-context";
 import { APPS } from "@/lib/apps-config";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  listAppMembership,
+  createInvitation,
+  revokeInvitation,
+  removeUserRole,
+} from "@/lib/admin.functions";
 import { PortalHeader } from "@/components/PortalHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -42,11 +48,12 @@ interface Invitation {
   expires_at: string;
 }
 
-interface RoleRow {
+interface Member {
   id: string;
   user_id: string;
-  role: AppRole;
-  profile?: { email: string; full_name: string | null } | null;
+  role: string;
+  email: string | null;
+  full_name: string | null;
 }
 
 function AdminApp() {
@@ -57,8 +64,13 @@ function AdminApp() {
   const validApp = VALID_APPS.includes(appKey);
   const cfg = validApp ? APPS[appKey] : null;
 
+  const listMembershipFn = useServerFn(listAppMembership);
+  const createInvitationFn = useServerFn(createInvitation);
+  const revokeInvitationFn = useServerFn(revokeInvitation);
+  const removeUserRoleFn = useServerFn(removeUserRole);
+
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [members, setMembers] = useState<RoleRow[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<AppRole>("partenaire");
   const [submitting, setSubmitting] = useState(false);
@@ -72,39 +84,15 @@ function AdminApp() {
 
   const load = useCallback(async () => {
     if (!validApp) return;
-    const [{ data: invs }, { data: rs }] = await Promise.all([
-      supabase
-        .from("invitations")
-        .select("id, email, role, status, created_at, expires_at")
-        .eq("application", appKey)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("user_roles")
-        .select("id, user_id, role")
-        .eq("application", appKey),
-    ]);
-    setInvitations((invs as Invitation[]) ?? []);
-
-    const rolesData = (rs as RoleRow[]) ?? [];
-    if (rolesData.length > 0) {
-      const ids = [...new Set(rolesData.map((r) => r.user_id))];
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("id, email, full_name")
-        .in("id", ids);
-      const map = new Map((profs ?? []).map((p) => [p.id, p]));
-      setMembers(
-        rolesData.map((r) => ({
-          ...r,
-          profile: map.get(r.user_id)
-            ? { email: map.get(r.user_id)!.email, full_name: map.get(r.user_id)!.full_name }
-            : null,
-        })),
-      );
-    } else {
-      setMembers([]);
+    try {
+      const res = await listMembershipFn({ data: { application: appKey } });
+      setInvitations(res.invitations as Invitation[]);
+      setMembers(res.members);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erreur de chargement.";
+      toast.error(msg);
     }
-  }, [validApp, appKey]);
+  }, [validApp, appKey, listMembershipFn]);
 
   useEffect(() => {
     if (user && validApp && isAppAdmin(appKey)) load();
@@ -121,34 +109,41 @@ function AdminApp() {
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { error } = await supabase.from("invitations").insert({
-      email: email.trim().toLowerCase(),
-      application: appKey,
-      role,
-      invited_by: user.id,
-    });
-    setSubmitting(false);
-    if (error) {
-      toast.error("Création impossible", { description: error.message });
-    } else {
+    try {
+      await createInvitationFn({
+        data: { application: appKey, email: email.trim().toLowerCase(), role },
+      });
       toast.success("Invitation créée", {
         description: `${email} aura accès à ${cfg.name} dès son inscription.`,
       });
       setEmail("");
       load();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Création impossible.";
+      toast.error(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const revokeInvitation = async (id: string) => {
-    const { error } = await supabase.from("invitations").delete().eq("id", id);
-    if (error) toast.error(error.message);
-    else { toast.success("Invitation supprimée"); load(); }
+  const revoke = async (id: string) => {
+    try {
+      await revokeInvitationFn({ data: { invitationId: id } });
+      toast.success("Invitation supprimée");
+      load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erreur");
+    }
   };
 
   const removeRole = async (id: string) => {
-    const { error } = await supabase.from("user_roles").delete().eq("id", id);
-    if (error) toast.error(error.message);
-    else { toast.success("Accès retiré"); load(); }
+    try {
+      await removeUserRoleFn({ data: { roleId: id } });
+      toast.success("Accès retiré");
+      load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erreur");
+    }
   };
 
   return (
@@ -230,7 +225,7 @@ function AdminApp() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => revokeInvitation(inv.id)}>
+                          <Button variant="ghost" size="sm" onClick={() => revoke(inv.id)}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </TableCell>
@@ -264,8 +259,8 @@ function AdminApp() {
                 <TableBody>
                   {members.map((m) => (
                     <TableRow key={m.id}>
-                      <TableCell className="font-medium">{m.profile?.email ?? "—"}</TableCell>
-                      <TableCell>{m.profile?.full_name ?? "—"}</TableCell>
+                      <TableCell className="font-medium">{m.email ?? "—"}</TableCell>
+                      <TableCell>{m.full_name ?? "—"}</TableCell>
                       <TableCell><Badge variant="outline">{m.role}</Badge></TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" onClick={() => removeRole(m.id)}>

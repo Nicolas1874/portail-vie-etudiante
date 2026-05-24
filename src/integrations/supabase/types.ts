@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          application: Database["public"]["Enums"]["app_name"] | null
+          created_at: string
+          details: Json
+          id: string
+          ip_address: string | null
+          target_email: string | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          application?: Database["public"]["Enums"]["app_name"] | null
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string | null
+          target_email?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          application?: Database["public"]["Enums"]["app_name"] | null
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string | null
+          target_email?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       invitations: {
         Row: {
           accepted_at: string | null
@@ -47,6 +92,45 @@ export type Database = {
           invited_by?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           status?: Database["public"]["Enums"]["invitation_status"]
+        }
+        Relationships: []
+      }
+      mfa_challenges: {
+        Row: {
+          attempts: number
+          code_hash: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          max_attempts: number
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          max_attempts?: number
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          max_attempts?: number
+          used_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -125,6 +209,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_name: "AIDE" | "HANDICAP" | "CVEC"
