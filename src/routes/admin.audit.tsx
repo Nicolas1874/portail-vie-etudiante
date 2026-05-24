@@ -28,6 +28,7 @@ interface AuditLog {
   action: string;
   target_email: string | null;
   target_type: string | null;
+  target_id: string | null;
   application: string | null;
   ip_address: string | null;
   user_agent: string | null;
