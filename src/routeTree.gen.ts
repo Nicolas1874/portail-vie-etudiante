@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminSecurityRouteImport } from './routes/admin.security'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAppRouteImport } from './routes/admin.$app'
 
 const LoginRoute = LoginRouteImport.update({
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSecurityRoute = AdminSecurityRouteImport.update({
+  id: '/admin/security',
+  path: '/admin/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAppRoute = AdminAppRouteImport.update({
   id: '/admin/$app',
   path: '/admin/$app',
@@ -33,30 +45,44 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/security': typeof AdminSecurityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/security': typeof AdminSecurityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/security': typeof AdminSecurityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/admin/$app'
+  fullPaths: '/' | '/login' | '/admin/$app' | '/admin/audit' | '/admin/security'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/admin/$app'
-  id: '__root__' | '/' | '/login' | '/admin/$app'
+  to: '/' | '/login' | '/admin/$app' | '/admin/audit' | '/admin/security'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/admin/$app'
+    | '/admin/audit'
+    | '/admin/security'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   AdminAppRoute: typeof AdminAppRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminSecurityRoute: typeof AdminSecurityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +101,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/security': {
+      id: '/admin/security'
+      path: '/admin/security'
+      fullPath: '/admin/security'
+      preLoaderRoute: typeof AdminSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/$app': {
       id: '/admin/$app'
       path: '/admin/$app'
@@ -89,7 +129,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   AdminAppRoute: AdminAppRoute,
+  AdminAuditRoute: AdminAuditRoute,
+  AdminSecurityRoute: AdminSecurityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
