@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { getMyRoles } from "@/lib/auth.functions";
 
 export type AppName = "AIDE" | "HANDICAP" | "CVEC";
 export type AppRole = "admin" | "partenaire" | "direction";
@@ -25,17 +27,19 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const getMyRolesFn = useServerFn(getMyRoles);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [roles, setRoles] = useState<UserRole[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadRoles = async (uid: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("application, role")
-      .eq("user_id", uid);
-    setRoles((data as UserRole[]) ?? []);
+    try {
+      const data = await getMyRolesFn({ data: { userId: uid } });
+      setRoles(data.roles ?? []);
+    } catch {
+      setRoles([]);
+    }
   };
 
   useEffect(() => {
@@ -60,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [getMyRolesFn]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
