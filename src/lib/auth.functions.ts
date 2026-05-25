@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const getMyRoles = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -13,7 +14,7 @@ export const getMyRoles = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { data, error } = await supabaseAdmin
       .from("user_roles")
       .select("application, role")
       .eq("user_id", context.userId);
