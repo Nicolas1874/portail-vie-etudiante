@@ -19,15 +19,9 @@ function Portal() {
     if (!loading && !user) navigate({ to: "/login" });
   }, [user, loading, navigate]);
 
-  // Auto-redirect if only one app and not direction
-  useEffect(() => {
-    if (!loading && user && accessibleApps.length === 1) {
-      const cfg = APPS[accessibleApps[0]];
-      if (cfg.url && cfg.url !== "#") {
-        window.location.href = cfg.url;
-      }
-    }
-  }, [loading, user, accessibleApps]);
+  // Plus d'auto-redirect : l'utilisateur choisit explicitement le SI à ouvrir
+  // (clic sur "Ouvrir" → nouvel onglet).
+
 
   if (loading || !user) {
     return (
