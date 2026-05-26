@@ -100,7 +100,14 @@ function Portal() {
                       <div className="flex gap-2">
                         <a
                           href={app.url}
-                          className="flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 hover:bg-accent transition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 transition ${
+                            app.url && app.url !== "#"
+                              ? "hover:bg-accent"
+                              : "opacity-50 pointer-events-none"
+                          }`}
+                          aria-disabled={!app.url || app.url === "#"}
                         >
                           Ouvrir
                         </a>
