@@ -19,15 +19,9 @@ function Portal() {
     if (!loading && !user) navigate({ to: "/login" });
   }, [user, loading, navigate]);
 
-  // Auto-redirect if only one app and not direction
-  useEffect(() => {
-    if (!loading && user && accessibleApps.length === 1) {
-      const cfg = APPS[accessibleApps[0]];
-      if (cfg.url && cfg.url !== "#") {
-        window.location.href = cfg.url;
-      }
-    }
-  }, [loading, user, accessibleApps]);
+  // Plus d'auto-redirect : l'utilisateur choisit explicitement le SI à ouvrir
+  // (clic sur "Ouvrir" → nouvel onglet).
+
 
   if (loading || !user) {
     return (
@@ -106,7 +100,14 @@ function Portal() {
                       <div className="flex gap-2">
                         <a
                           href={app.url}
-                          className="flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 hover:bg-accent transition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 transition ${
+                            app.url && app.url !== "#"
+                              ? "hover:bg-accent"
+                              : "opacity-50 pointer-events-none"
+                          }`}
+                          aria-disabled={!app.url || app.url === "#"}
                         >
                           Ouvrir
                         </a>

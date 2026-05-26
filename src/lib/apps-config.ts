@@ -9,14 +9,17 @@ export interface AppConfig {
   accent: string;
 }
 
-// URLs placeholder — les SI cibles sont en cours de développement.
+// URL du SI AIDE — à mettre à jour avec l'URL Lovable publiée du projet SI AIDE.
+// Ex: "https://project--<lovable-id>.lovable.app" ou le domaine custom.
+const SI_AIDE_URL = "https://si-aide.lovable.app"; // TODO: remplacer par l'URL réelle après publication
+
 export const APPS: Record<AppName, AppConfig> = {
   AIDE: {
     key: "AIDE",
     name: "Guichet de l'Aide",
     shortName: "Aide",
     description: "Demandes et suivi des aides étudiantes.",
-    url: "#",
+    url: SI_AIDE_URL,
     accent: "var(--accent-aide)",
   },
   HANDICAP: {
