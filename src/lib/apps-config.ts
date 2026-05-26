@@ -9,9 +9,8 @@ export interface AppConfig {
   accent: string;
 }
 
-// URL du SI AIDE — à mettre à jour avec l'URL Lovable publiée du projet SI AIDE.
-// Ex: "https://project--<lovable-id>.lovable.app" ou le domaine custom.
-const SI_AIDE_URL = "https://si-aide.lovable.app"; // TODO: remplacer par l'URL réelle après publication
+// URL du SI AIDE — preview Lovable (à remplacer par l'URL publiée le moment venu).
+const SI_AIDE_URL = "https://id-preview--1a3873ce-27e4-44ee-a7ba-0f902c3557c7.lovable.app";
 
 export const APPS: Record<AppName, AppConfig> = {
   AIDE: {
