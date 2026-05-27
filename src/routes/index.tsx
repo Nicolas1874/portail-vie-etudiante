@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth-context";
 import { APPS, APP_LIST } from "@/lib/apps-config";
 import { PortalHeader } from "@/components/PortalHeader";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, Settings, Lock } from "lucide-react";
+import { ArrowUpRight, Settings, Lock, Loader2 } from "lucide-react";
+import { issueAideSsoToken } from "@/lib/sso.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   component: Portal,
@@ -14,6 +17,28 @@ export const Route = createFileRoute("/")({
 function Portal() {
   const { user, loading, accessibleApps, roles, isAppAdmin } = useAuth();
   const navigate = useNavigate();
+  const issueSso = useServerFn(issueAideSsoToken);
+  const [ssoLoading, setSsoLoading] = useState<string | null>(null);
+
+  const openApp = async (appKey: string, url: string) => {
+    if (!url || url === "#") return;
+    if (appKey !== "AIDE") {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setSsoLoading(appKey);
+    try {
+      const { token } = await issueSso();
+      const base = url.replace(/\/+$/, "");
+      window.open(`${base}/sso?token=${encodeURIComponent(token)}`, "_blank", "noopener,noreferrer");
+    } catch (e) {
+      console.error("[sso] échec génération token", e);
+      toast.error("Connexion automatique impossible, ouverture en mode standard.");
+      window.open(url, "_blank", "noopener,noreferrer");
+    } finally {
+      setSsoLoading(null);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -98,19 +123,19 @@ function Portal() {
                         )}
                       </div>
                       <div className="flex gap-2">
-                        <a
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 transition ${
+                        <button
+                          type="button"
+                          onClick={() => openApp(app.key, app.url)}
+                          disabled={!app.url || app.url === "#" || ssoLoading === app.key}
+                          className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium rounded-md border px-3 py-1.5 transition ${
                             app.url && app.url !== "#"
                               ? "hover:bg-accent"
-                              : "opacity-50 pointer-events-none"
-                          }`}
-                          aria-disabled={!app.url || app.url === "#"}
+                              : "opacity-50 cursor-not-allowed"
+                          } ${ssoLoading === app.key ? "opacity-70 cursor-wait" : ""}`}
                         >
+                          {ssoLoading === app.key && <Loader2 className="h-3 w-3 animate-spin" />}
                           Ouvrir
-                        </a>
+                        </button>
                         {isAppAdmin(app.key) && (
                           <Link
                             to="/admin/$app"
