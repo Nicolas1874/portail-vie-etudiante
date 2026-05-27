@@ -17,6 +17,28 @@ export const Route = createFileRoute("/")({
 function Portal() {
   const { user, loading, accessibleApps, roles, isAppAdmin } = useAuth();
   const navigate = useNavigate();
+  const issueSso = useServerFn(issueAideSsoToken);
+  const [ssoLoading, setSsoLoading] = useState<string | null>(null);
+
+  const openApp = async (appKey: string, url: string) => {
+    if (!url || url === "#") return;
+    if (appKey !== "AIDE") {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setSsoLoading(appKey);
+    try {
+      const { token } = await issueSso();
+      const sep = url.includes("?") ? "&" : "?";
+      window.open(`${url}/sso${sep}token=${encodeURIComponent(token)}`, "_blank", "noopener,noreferrer");
+    } catch (e) {
+      console.error("[sso] échec génération token", e);
+      toast.error("Connexion automatique impossible, ouverture en mode standard.");
+      window.open(url, "_blank", "noopener,noreferrer");
+    } finally {
+      setSsoLoading(null);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
