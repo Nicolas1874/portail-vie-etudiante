@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth-context";
 import { APPS, APP_LIST } from "@/lib/apps-config";
 import { PortalHeader } from "@/components/PortalHeader";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, Settings, Lock } from "lucide-react";
+import { ArrowUpRight, Settings, Lock, Loader2 } from "lucide-react";
+import { issueAideSsoToken } from "@/lib/sso.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   component: Portal,
