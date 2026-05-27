@@ -29,8 +29,8 @@ function Portal() {
     setSsoLoading(appKey);
     try {
       const { token } = await issueSso();
-      const sep = url.includes("?") ? "&" : "?";
-      window.open(`${url}/sso${sep}token=${encodeURIComponent(token)}`, "_blank", "noopener,noreferrer");
+      const base = url.replace(/\/+$/, "");
+      window.open(`${base}/sso?token=${encodeURIComponent(token)}`, "_blank", "noopener,noreferrer");
     } catch (e) {
       console.error("[sso] échec génération token", e);
       toast.error("Connexion automatique impossible, ouverture en mode standard.");
