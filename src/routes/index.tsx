@@ -123,19 +123,19 @@ function Portal() {
                         )}
                       </div>
                       <div className="flex gap-2">
-                        <a
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`flex-1 text-center text-xs font-medium rounded-md border px-3 py-1.5 transition ${
+                        <button
+                          type="button"
+                          onClick={() => openApp(app.key, app.url)}
+                          disabled={!app.url || app.url === "#" || ssoLoading === app.key}
+                          className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium rounded-md border px-3 py-1.5 transition ${
                             app.url && app.url !== "#"
                               ? "hover:bg-accent"
-                              : "opacity-50 pointer-events-none"
-                          }`}
-                          aria-disabled={!app.url || app.url === "#"}
+                              : "opacity-50 cursor-not-allowed"
+                          } ${ssoLoading === app.key ? "opacity-70 cursor-wait" : ""}`}
                         >
+                          {ssoLoading === app.key && <Loader2 className="h-3 w-3 animate-spin" />}
                           Ouvrir
-                        </a>
+                        </button>
                         {isAppAdmin(app.key) && (
                           <Link
                             to="/admin/$app"
