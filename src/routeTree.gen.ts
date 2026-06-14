@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminSecurityRouteImport } from './routes/admin.security'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAppRouteImport } from './routes/admin.$app'
+import { Route as ApiPublicRolesSyncRouteImport } from './routes/api/public/roles/sync'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -40,6 +41,11 @@ const AdminAppRoute = AdminAppRouteImport.update({
   path: '/admin/$app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRolesSyncRoute = ApiPublicRolesSyncRouteImport.update({
+  id: '/api/public/roles/sync',
+  path: '/api/public/roles/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +70,25 @@ export interface FileRoutesById {
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/admin/$app' | '/admin/audit' | '/admin/security'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/admin/$app'
+    | '/admin/audit'
+    | '/admin/security'
+    | '/api/public/roles/sync'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/admin/$app' | '/admin/audit' | '/admin/security'
+  to:
+    | '/'
+    | '/login'
+    | '/admin/$app'
+    | '/admin/audit'
+    | '/admin/security'
+    | '/api/public/roles/sync'
   id:
     | '__root__'
     | '/'
@@ -75,6 +96,7 @@ export interface FileRouteTypes {
     | '/admin/$app'
     | '/admin/audit'
     | '/admin/security'
+    | '/api/public/roles/sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,6 +105,7 @@ export interface RootRouteChildren {
   AdminAppRoute: typeof AdminAppRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminSecurityRoute: typeof AdminSecurityRoute
+  ApiPublicRolesSyncRoute: typeof ApiPublicRolesSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/roles/sync': {
+      id: '/api/public/roles/sync'
+      path: '/api/public/roles/sync'
+      fullPath: '/api/public/roles/sync'
+      preLoaderRoute: typeof ApiPublicRolesSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -131,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAppRoute: AdminAppRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminSecurityRoute: AdminSecurityRoute,
+  ApiPublicRolesSyncRoute: ApiPublicRolesSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
