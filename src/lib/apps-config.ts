@@ -11,6 +11,8 @@ export interface AppConfig {
 
 // URL du SI AIDE — preview Lovable (à remplacer par l'URL publiée le moment venu).
 const SI_AIDE_URL = "https://id-preview--1a3873ce-27e4-44ee-a7ba-0f902c3557c7.lovable.app";
+const SI_HANDICAP_URL = "https://id-preview--a9da78bf-246c-4781-90d1-2ab18d2b2bfa.lovable.app";
+const SI_CVEC_URL = "https://id-preview--cce61189-fb49-4e26-bf32-bec23a30b14e.lovable.app";
 
 export const APPS: Record<AppName, AppConfig> = {
   AIDE: {
@@ -25,16 +27,16 @@ export const APPS: Record<AppName, AppConfig> = {
     key: "HANDICAP",
     name: "Passerelle Handicap",
     shortName: "Handicap",
-    description: "Accompagnement et aménagements handicap.",
-    url: "#",
+    description: "Accompagnement et aménagements handicap (Handi-Décision).",
+    url: SI_HANDICAP_URL,
     accent: "var(--accent-handicap)",
   },
   CVEC: {
     key: "CVEC",
     name: "CVEC",
     shortName: "CVEC",
-    description: "Contribution à la vie étudiante et de campus.",
-    url: "#",
+    description: "Contribution à la vie étudiante et de campus (CVEC Harmony).",
+    url: SI_CVEC_URL,
     accent: "var(--accent-cvec)",
   },
 };
