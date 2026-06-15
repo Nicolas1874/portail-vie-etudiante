@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth-context";
+import { useExternalAuth } from "@/lib/external-auth";
 import { APPS, APP_LIST } from "@/lib/apps-config";
 import { PortalHeader } from "@/components/PortalHeader";
 import { Card } from "@/components/ui/card";
