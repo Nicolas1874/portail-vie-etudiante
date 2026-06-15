@@ -62,7 +62,7 @@ function Portal() {
   // (clic sur "Ouvrir" → nouvel onglet).
 
 
-  if (loading || !user) {
+  if (!authReady || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-sm text-muted-foreground">Chargement…</div>
