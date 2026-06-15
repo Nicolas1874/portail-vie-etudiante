@@ -18,24 +18,27 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { user: extUser, login: extLogin } = useExternalAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/" });
-  }, [user, loading, navigate]);
+    if ((!loading && user) || extUser) navigate({ to: "/" });
+  }, [user, loading, extUser, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setSubmitting(false);
-    if (error) {
-      toast.error("Connexion impossible", { description: error.message });
-    } else {
+    try {
+      await extLogin(email, password);
       navigate({ to: "/" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      toast.error("Connexion impossible", { description: message });
+    } finally {
+      setSubmitting(false);
     }
   };
 
