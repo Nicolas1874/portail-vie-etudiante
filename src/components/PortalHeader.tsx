@@ -39,11 +39,11 @@ export function PortalHeader() {
           </div>
         </Link>
 
-        {user && (
+        {displayUser && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="text-sm">
-                {user.email}
+                {displayEmail}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
