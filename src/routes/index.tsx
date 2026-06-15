@@ -92,8 +92,8 @@ function Portal() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {APP_LIST.map((app) => {
-              const accessible = accessibleApps.includes(app.key);
+            {APP_LIST.filter((app) => accessibleApps.includes(app.key)).map((app) => {
+              const accessible = true;
               const appRoles = roles.filter((r) => r.application === app.key);
               return (
                 <Card
