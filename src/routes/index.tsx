@@ -16,10 +16,20 @@ export const Route = createFileRoute("/")({
 });
 
 function Portal() {
-  const { user, loading, accessibleApps, roles, isAppAdmin } = useAuth();
+  const { user, loading, roles, isAppAdmin } = useAuth();
+  const { user: extUser, apps: extApps, loading: extLoading } = useExternalAuth();
   const navigate = useNavigate();
   const issueSso = useServerFn(issueAideSsoToken);
   const [ssoLoading, setSsoLoading] = useState<string | null>(null);
+
+  // Source des droits : si l'utilisateur est connecté via l'API externe, on
+  // utilise la liste retournée par /login. Sinon, on retombe sur les rôles
+  // gérés par le backend Supabase (admins, direction, etc.).
+  const accessibleApps = extUser
+    ? extApps
+    : (["AIDE", "HANDICAP", "CVEC"] as const).filter((app) =>
+        roles.some((r) => r.role === "direction" || r.application === app),
+      );
 
   const openApp = async (appKey: string, url: string) => {
     if (!url || url === "#") return;
@@ -41,9 +51,12 @@ function Portal() {
     }
   };
 
+  const authReady = !loading && !extLoading;
+  const isAuthenticated = !!user || !!extUser;
+
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login" });
-  }, [user, loading, navigate]);
+    if (authReady && !isAuthenticated) navigate({ to: "/login" });
+  }, [authReady, isAuthenticated, navigate]);
 
   // Plus d'auto-redirect : l'utilisateur choisit explicitement le SI à ouvrir
   // (clic sur "Ouvrir" → nouvel onglet).
