@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Building2, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useExternalAuth } from "@/lib/external-auth";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,10 +14,15 @@ import {
 
 export function PortalHeader() {
   const { user, signOut } = useAuth();
+  const { user: extUser, logout: extLogout } = useExternalAuth();
   const navigate = useNavigate();
 
+  const displayUser = extUser ?? user;
+  const displayEmail = extUser?.email ?? user?.email;
+
   const handleLogout = async () => {
-    await signOut();
+    extLogout();
+    if (user) await signOut();
     navigate({ to: "/login" });
   };
 
@@ -33,11 +39,11 @@ export function PortalHeader() {
           </div>
         </Link>
 
-        {user && (
+        {displayUser && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="text-sm">
-                {user.email}
+                {displayEmail}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
