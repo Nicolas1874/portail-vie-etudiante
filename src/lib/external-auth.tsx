@@ -136,7 +136,7 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     if (!API_URL) throw new Error("VITE_API_URL n'est pas configuré.");
-    const res = await fetch(`${API_URL}/api/login`, {
+    const res = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ email, password }),
@@ -146,7 +146,7 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(async (email: string, password: string, fullName: string) => {
     if (!API_URL) throw new Error("VITE_API_URL n'est pas configuré.");
-    const res = await fetch(`${API_URL}/api/register`, {
+    const res = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ email, password, fullName, full_name: fullName, name: fullName }),
