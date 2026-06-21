@@ -11,40 +11,65 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [user, setUser] = useState<any>(null);
   const [applications, setApplications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr) {
-      navigate({ to: "/login" });
-      return;
-    }
-
-    try {
-      const userData = JSON.parse(userStr);
-      setUser(userData);
+    const checkAuth = () => {
+      const userStr = localStorage.getItem("user");
       
-      // Si l'utilisateur est superadmin, on affiche les 3 tuiles
-      if (userData.role === 'superadmin') {
-        setApplications([
-          { name: "AIDE", code: "AIDE", url: "#" },
-          { name: "HANDICAP", code: "HANDICAP", url: "#" },
-          { name: "CVEC", code: "CVEC", url: "#" }
-        ]);
+      if (!userStr) {
+        // On attend un tout petit peu pour être sûr que ce n'est pas un bug de chargement
+        setTimeout(() => {
+          const reCheck = localStorage.getItem("user");
+          if (!reCheck) {
+            navigate({ to: "/login" });
+          } else {
+            initUser(reCheck);
+          }
+        }, 500);
       } else {
-        // Sinon on regarde les applications stockées
-        const appsStr = localStorage.getItem("applications");
-        if (appsStr) setApplications(JSON.parse(appsStr));
+        initUser(userStr);
       }
-    } catch (e) {
-      console.error("Erreur de lecture des données utilisateur", e);
-    }
+    };
+
+    const initUser = (dataStr: string) => {
+      try {
+        const userData = JSON.parse(dataStr);
+        setUser(userData);
+        
+        if (userData.role === 'superadmin') {
+          setApplications([
+            { name: "AIDE", code: "AIDE", url: "#" },
+            { name: "HANDICAP", code: "HANDICAP", url: "#" },
+            { name: "CVEC", code: "CVEC", url: "#" }
+          ]);
+        } else {
+          const appsStr = localStorage.getItem("applications");
+          if (appsStr) setApplications(JSON.parse(appsStr));
+        }
+      } catch (e) {
+        console.error("Erreur JSON", e);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.clear();
+    setUser(null);
     navigate({ to: "/login" });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500 animate-pulse">Chargement de votre espace...</p>
+      </div>
+    );
+  }
 
   if (!user) return null;
 
@@ -58,7 +83,7 @@ function Index() {
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="font-bold">{user.prenom} {user.nom}</p>
+              <p className="font-bold">{user.prenom || ''} {user.nom || user.email}</p>
               <p className="text-sm text-blue-600 font-medium">{user.role}</p>
             </div>
             <Button variant="outline" onClick={handleLogout}>
@@ -74,7 +99,6 @@ function Index() {
             <Card key={app.code} className="border-t-4 border-t-blue-600">
               <CardHeader>
                 <CardTitle>{app.name}</CardTitle>
-                <CardDescription>Accéder à {app.name}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button className="w-full bg-blue-600" onClick={() => window.open(app.url, '_blank')}>
@@ -84,12 +108,6 @@ function Index() {
             </Card>
           ))}
         </div>
-
-        {applications.length === 0 && (
-          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200 text-yellow-800">
-            Aucun accès trouvé pour votre compte.
-          </div>
-        )}
       </div>
     </div>
   );
