@@ -10,9 +10,11 @@ export interface AppConfig {
 }
 
 // URL du SI AIDE — preview Lovable (à remplacer par l'URL publiée le moment venu).
-const SI_AIDE_URL = "https://id-preview--1a3873ce-27e4-44ee-a7ba-0f902c3557c7.lovable.app";
+// SI AIDE intégré localement à la route /aide.
+const SI_AIDE_URL = "/aide";
 const SI_HANDICAP_URL = "https://id-preview--a9da78bf-246c-4781-90d1-2ab18d2b2bfa.lovable.app";
 const SI_CVEC_URL = "https://id-preview--cce61189-fb49-4e26-bf32-bec23a30b14e.lovable.app";
+
 
 export const APPS: Record<AppName, AppConfig> = {
   AIDE: {
