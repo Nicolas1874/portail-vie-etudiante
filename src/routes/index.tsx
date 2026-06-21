@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LogOut, LayoutDashboard, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -11,88 +11,103 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [user, setUser] = useState<any>(null);
   const [applications, setApplications] = useState<any[]>([]);
-  const [checked, setChecked] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    // On récupère les données
     const userStr = localStorage.getItem("user");
+    const appsStr = localStorage.getItem("applications");
+
     if (userStr) {
       try {
         const userData = JSON.parse(userStr);
         setUser(userData);
         
-        if (userData.role === 'superadmin') {
+        // Vérification du rôle (on accepte Superadmin ou superadmin)
+        if (userData.role && userData.role.toLowerCase() === 'superadmin') {
           setApplications([
             { name: "AIDE", code: "AIDE", url: "#" },
             { name: "HANDICAP", code: "HANDICAP", url: "#" },
             { name: "CVEC", code: "CVEC", url: "#" }
           ]);
-        } else {
-          const appsStr = localStorage.getItem("applications");
-          if (appsStr) setApplications(JSON.parse(appsStr));
+        } else if (appsStr) {
+          setApplications(JSON.parse(appsStr));
         }
       } catch (e) {
-        console.error("Erreur de lecture", e);
+        console.error("Erreur de lecture session", e);
       }
     }
-    setChecked(true);
+    setIsReady(true);
   }, []);
 
-  const handleLogout = () => {
+  // Fonction de déconnexion forcée
+  const forceLogout = () => {
     localStorage.clear();
-    window.location.href = "/login"; // Redirection brutale et propre
+    window.location.href = "/login";
   };
 
-  if (!checked) return <div className="p-8 text-center">Vérification de la session...</div>;
+  // Fonction de connexion forcée
+  const forceLogin = () => {
+    window.location.href = "/login";
+  };
 
-  // SI PAS D'UTILISATEUR : On affiche un écran de bienvenue au lieu de rediriger
+  if (!isReady) return null;
+
+  // SI PAS CONNECTÉ
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <Card className="max-w-md w-full text-center p-6">
-          <LayoutDashboard className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-          <CardTitle className="text-2xl mb-2">Portail Vie Étudiante</CardTitle>
-          <p className="text-gray-600 mb-6">Veuillez vous connecter pour accéder à vos applications.</p>
-          <Button asChild className="w-full bg-blue-600">
-            <Link to="/login">
-              <LogIn className="w-4 h-4 mr-2" /> Se connecter
-            </Link>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+        <Card className="max-w-md w-full text-center p-8 shadow-lg">
+          <LayoutDashboard className="w-16 h-16 text-blue-600 mx-auto mb-6" />
+          <h1 className="text-2xl font-bold mb-2">Portail Vie Étudiante</h1>
+          <p className="text-gray-600 mb-8">Veuillez vous identifier pour accéder à vos outils.</p>
+          <Button 
+            onClick={forceLogin} 
+            className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg"
+          >
+            <LogIn className="w-5 h-5 mr-2" /> Se connecter
           </Button>
         </Card>
       </div>
     );
   }
 
-  // SI UTILISATEUR CONNECTÉ : On affiche les tuiles
+  // SI CONNECTÉ
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-white p-6 rounded-lg shadow-sm gap-4">
-          <div className="flex items-center gap-3">
-            <LayoutDashboard className="text-blue-600" />
-            <h1 className="text-xl md:text-2xl font-bold">Portail Vie Étudiante</h1>
+    <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm border-b px-6 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <LayoutDashboard className="text-blue-600 w-6 h-6" />
+            <span className="text-xl font-bold">Portail SI</span>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="font-bold">{user.prenom || ''} {user.nom || user.email}</p>
-              <p className="text-sm text-blue-600 font-medium">{user.role || 'Agent'}</p>
+              <p className="font-bold text-gray-900">{user.prenom || ''} {user.nom || user.email}</p>
+              <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">{user.role}</p>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" /> Déconnexion
+            <Button variant="outline" size="sm" onClick={forceLogout} className="text-red-600 border-red-200 hover:bg-red-50">
+              <LogOut className="w-4 h-4 mr-2" /> Quitter
             </Button>
           </div>
         </div>
+      </nav>
 
-        <h2 className="text-xl font-semibold mb-6">Vos Applications</h2>
+      <main className="max-w-7xl mx-auto p-6 md:p-12">
+        <h2 className="text-2xl font-bold text-gray-800 mb-8">Vos Applications</h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {applications.map((app) => (
-            <Card key={app.code} className="border-t-4 border-t-blue-600 hover:shadow-md transition-shadow">
+            <Card key={app.code} className="border-t-4 border-t-blue-600 hover:scale-105 transition-transform duration-200">
               <CardHeader>
-                <CardTitle>{app.name}</CardTitle>
+                <CardTitle className="text-xl">{app.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Button className="w-full bg-blue-600" onClick={() => window.open(app.url, '_blank')}>
-                  Ouvrir
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700" 
+                  onClick={() => window.open(app.url, '_blank')}
+                >
+                  Ouvrir l'outil
                 </Button>
               </CardContent>
             </Card>
@@ -100,11 +115,12 @@ function Index() {
         </div>
 
         {applications.length === 0 && (
-          <Card className="bg-amber-50 p-6 text-amber-800 border-amber-200">
-            Aucun accès spécifique n'a été trouvé pour votre compte.
-          </Card>
+          <div className="bg-amber-50 border border-amber-200 p-8 rounded-xl text-center">
+            <p className="text-amber-800 font-medium text-lg">Aucun accès n'est configuré pour votre compte.</p>
+            <p className="text-amber-600">Contactez l'assistance si cela vous semble être une erreur.</p>
+          </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
