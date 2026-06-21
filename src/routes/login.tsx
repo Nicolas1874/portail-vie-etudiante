@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useExternalAuth } from "@/lib/external-auth";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { user: extUser, login: extLogin } = useExternalAuth();
+  const { user: extUser, login: extLogin, register: extRegister } = useExternalAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -45,21 +44,15 @@ function LoginPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-        data: { full_name: fullName },
-      },
-    });
-    setSubmitting(false);
-    if (error) {
-      toast.error("Inscription impossible", { description: error.message });
-    } else {
-      toast.success("Compte créé", {
-        description: "Vérifiez votre boîte mail pour confirmer votre adresse.",
-      });
+    try {
+      await extRegister(email, password, fullName);
+      toast.success("Compte créé", { description: "Vous êtes maintenant connecté." });
+      navigate({ to: "/" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      toast.error("Inscription impossible", { description: message });
+    } finally {
+      setSubmitting(false);
     }
   };
 
