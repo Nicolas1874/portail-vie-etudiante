@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Card } from "@/components/ui/card";
 import { formatDateTime } from "@/lib/labels";
 
-export const Route = createFileRoute("/_app/admin/audit")({
+export const Route = createFileRoute("/aide/admin/audit")({
   component: AuditPage,
 });
 

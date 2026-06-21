@@ -18,7 +18,7 @@ import {
   readStoredRoleSwitchState,
 } from "@/lib/role-switch";
 
-export const Route = createFileRoute("/_app/parametres")({
+export const Route = createFileRoute("/aide/parametres")({
   component: Settings,
 });
 

@@ -37,7 +37,7 @@ import {
 } from "lucide-react";
 import { DonsListeDeCoursesTab } from "@/components/DonsListeDeCoursesTab";
 
-export const Route = createFileRoute("/_app/dons")({
+export const Route = createFileRoute("/aide/dons")({
   component: DonsPage,
 });
 

@@ -41,7 +41,7 @@ import {
   PrestoUrgenceBadge,
 } from "@/components/presto/PrestoBadges";
 
-export const Route = createFileRoute("/_app/presto/")({
+export const Route = createFileRoute("/aide/presto/")({
   component: PrestoIndex,
 });
 

@@ -12,10 +12,49 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AideRouteImport } from './routes/aide'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AideIndexRouteImport } from './routes/aide/index'
+import { Route as AideRendezVousRouteImport } from './routes/aide/rendez-vous'
+import { Route as AideParametresRouteImport } from './routes/aide/parametres'
+import { Route as AideNotificationsRouteImport } from './routes/aide/notifications'
+import { Route as AideMessagerieRouteImport } from './routes/aide/messagerie'
+import { Route as AideLogementRouteImport } from './routes/aide/logement'
+import { Route as AideExportsRouteImport } from './routes/aide/exports'
+import { Route as AideDonsRouteImport } from './routes/aide/dons'
+import { Route as AideDemandesEvolutionRouteImport } from './routes/aide/demandes-evolution'
+import { Route as AideCalendrierRouteImport } from './routes/aide/calendrier'
+import { Route as AideAteliersRouteImport } from './routes/aide/ateliers'
+import { Route as AideAnnuaireRouteImport } from './routes/aide/annuaire'
 import { Route as AdminSecurityRouteImport } from './routes/admin.security'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAppRouteImport } from './routes/admin.$app'
+import { Route as AideUsagersIndexRouteImport } from './routes/aide/usagers.index'
+import { Route as AidePrestoIndexRouteImport } from './routes/aide/presto.index'
+import { Route as AidePartenaireIndexRouteImport } from './routes/aide/partenaire.index'
+import { Route as AideLogementIndexRouteImport } from './routes/aide/logement.index'
+import { Route as AideUsagersNouveauRouteImport } from './routes/aide/usagers.nouveau'
+import { Route as AideUsagersIdRouteImport } from './routes/aide/usagers.$id'
+import { Route as AidePrestoParametresRouteImport } from './routes/aide/presto.parametres'
+import { Route as AidePrestoExportsRouteImport } from './routes/aide/presto.exports'
+import { Route as AidePartenaireCoupsPouceRouteImport } from './routes/aide/partenaire.coups-pouce'
+import { Route as AideAdminUtilisateursRouteImport } from './routes/aide/admin.utilisateurs'
+import { Route as AideAdminTerritoiresRouteImport } from './routes/aide/admin.territoires'
+import { Route as AideAdminStructuresRouteImport } from './routes/aide/admin.structures'
+import { Route as AideAdminSeuilsRouteImport } from './routes/aide/admin.seuils'
+import { Route as AideAdminRgpdRouteImport } from './routes/aide/admin.rgpd'
+import { Route as AideAdminReorientationRouteImport } from './routes/aide/admin.reorientation'
+import { Route as AideAdminPartenairesRouteImport } from './routes/aide/admin.partenaires'
+import { Route as AideAdminLogementProgrammesRouteImport } from './routes/aide/admin.logement-programmes'
+import { Route as AideAdminInvitationsPartenairesRouteImport } from './routes/aide/admin.invitations-partenaires'
+import { Route as AideAdminDemandesEvolutionRouteImport } from './routes/aide/admin.demandes-evolution'
+import { Route as AideAdminCoupsPouceRouteImport } from './routes/aide/admin.coups-pouce'
+import { Route as AideAdminAuditRouteImport } from './routes/aide/admin.audit'
 import { Route as ApiPublicRolesSyncRouteImport } from './routes/api/public/roles/sync'
+import { Route as ApiPublicAideStatsRouteImport } from './routes/api/public/aide/stats'
+import { Route as AideLogementProgrammesIdRouteImport } from './routes/aide/logement.programmes.$id'
+import { Route as AideLogementDossiersIdRouteImport } from './routes/aide/logement.dossiers.$id'
+import { Route as ApiPublicAideHooksStocksAlertesRouteImport } from './routes/api/public/aide/hooks/stocks-alertes'
+import { Route as ApiPublicAideHooksRdvRappelsRouteImport } from './routes/api/public/aide/hooks/rdv-rappels'
+import { Route as ApiPublicAideHooksAteliersRappelsRouteImport } from './routes/api/public/aide/hooks/ateliers-rappels'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -32,6 +71,66 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AideIndexRoute = AideIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideRendezVousRoute = AideRendezVousRouteImport.update({
+  id: '/rendez-vous',
+  path: '/rendez-vous',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideParametresRoute = AideParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideNotificationsRoute = AideNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideMessagerieRoute = AideMessagerieRouteImport.update({
+  id: '/messagerie',
+  path: '/messagerie',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideLogementRoute = AideLogementRouteImport.update({
+  id: '/logement',
+  path: '/logement',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideExportsRoute = AideExportsRouteImport.update({
+  id: '/exports',
+  path: '/exports',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideDonsRoute = AideDonsRouteImport.update({
+  id: '/dons',
+  path: '/dons',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideDemandesEvolutionRoute = AideDemandesEvolutionRouteImport.update({
+  id: '/demandes-evolution',
+  path: '/demandes-evolution',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideCalendrierRoute = AideCalendrierRouteImport.update({
+  id: '/calendrier',
+  path: '/calendrier',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAteliersRoute = AideAteliersRouteImport.update({
+  id: '/ateliers',
+  path: '/ateliers',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAnnuaireRoute = AideAnnuaireRouteImport.update({
+  id: '/annuaire',
+  path: '/annuaire',
+  getParentRoute: () => AideRoute,
+} as any)
 const AdminSecurityRoute = AdminSecurityRouteImport.update({
   id: '/admin/security',
   path: '/admin/security',
@@ -47,39 +146,297 @@ const AdminAppRoute = AdminAppRouteImport.update({
   path: '/admin/$app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AideUsagersIndexRoute = AideUsagersIndexRouteImport.update({
+  id: '/usagers/',
+  path: '/usagers/',
+  getParentRoute: () => AideRoute,
+} as any)
+const AidePrestoIndexRoute = AidePrestoIndexRouteImport.update({
+  id: '/presto/',
+  path: '/presto/',
+  getParentRoute: () => AideRoute,
+} as any)
+const AidePartenaireIndexRoute = AidePartenaireIndexRouteImport.update({
+  id: '/partenaire/',
+  path: '/partenaire/',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideLogementIndexRoute = AideLogementIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AideLogementRoute,
+} as any)
+const AideUsagersNouveauRoute = AideUsagersNouveauRouteImport.update({
+  id: '/usagers/nouveau',
+  path: '/usagers/nouveau',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideUsagersIdRoute = AideUsagersIdRouteImport.update({
+  id: '/usagers/$id',
+  path: '/usagers/$id',
+  getParentRoute: () => AideRoute,
+} as any)
+const AidePrestoParametresRoute = AidePrestoParametresRouteImport.update({
+  id: '/presto/parametres',
+  path: '/presto/parametres',
+  getParentRoute: () => AideRoute,
+} as any)
+const AidePrestoExportsRoute = AidePrestoExportsRouteImport.update({
+  id: '/presto/exports',
+  path: '/presto/exports',
+  getParentRoute: () => AideRoute,
+} as any)
+const AidePartenaireCoupsPouceRoute =
+  AidePartenaireCoupsPouceRouteImport.update({
+    id: '/partenaire/coups-pouce',
+    path: '/partenaire/coups-pouce',
+    getParentRoute: () => AideRoute,
+  } as any)
+const AideAdminUtilisateursRoute = AideAdminUtilisateursRouteImport.update({
+  id: '/admin/utilisateurs',
+  path: '/admin/utilisateurs',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminTerritoiresRoute = AideAdminTerritoiresRouteImport.update({
+  id: '/admin/territoires',
+  path: '/admin/territoires',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminStructuresRoute = AideAdminStructuresRouteImport.update({
+  id: '/admin/structures',
+  path: '/admin/structures',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminSeuilsRoute = AideAdminSeuilsRouteImport.update({
+  id: '/admin/seuils',
+  path: '/admin/seuils',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminRgpdRoute = AideAdminRgpdRouteImport.update({
+  id: '/admin/rgpd',
+  path: '/admin/rgpd',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminReorientationRoute = AideAdminReorientationRouteImport.update({
+  id: '/admin/reorientation',
+  path: '/admin/reorientation',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminPartenairesRoute = AideAdminPartenairesRouteImport.update({
+  id: '/admin/partenaires',
+  path: '/admin/partenaires',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminLogementProgrammesRoute =
+  AideAdminLogementProgrammesRouteImport.update({
+    id: '/admin/logement-programmes',
+    path: '/admin/logement-programmes',
+    getParentRoute: () => AideRoute,
+  } as any)
+const AideAdminInvitationsPartenairesRoute =
+  AideAdminInvitationsPartenairesRouteImport.update({
+    id: '/admin/invitations-partenaires',
+    path: '/admin/invitations-partenaires',
+    getParentRoute: () => AideRoute,
+  } as any)
+const AideAdminDemandesEvolutionRoute =
+  AideAdminDemandesEvolutionRouteImport.update({
+    id: '/admin/demandes-evolution',
+    path: '/admin/demandes-evolution',
+    getParentRoute: () => AideRoute,
+  } as any)
+const AideAdminCoupsPouceRoute = AideAdminCoupsPouceRouteImport.update({
+  id: '/admin/coups-pouce',
+  path: '/admin/coups-pouce',
+  getParentRoute: () => AideRoute,
+} as any)
+const AideAdminAuditRoute = AideAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => AideRoute,
+} as any)
 const ApiPublicRolesSyncRoute = ApiPublicRolesSyncRouteImport.update({
   id: '/api/public/roles/sync',
   path: '/api/public/roles/sync',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAideStatsRoute = ApiPublicAideStatsRouteImport.update({
+  id: '/api/public/aide/stats',
+  path: '/api/public/aide/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AideLogementProgrammesIdRoute =
+  AideLogementProgrammesIdRouteImport.update({
+    id: '/programmes/$id',
+    path: '/programmes/$id',
+    getParentRoute: () => AideLogementRoute,
+  } as any)
+const AideLogementDossiersIdRoute = AideLogementDossiersIdRouteImport.update({
+  id: '/dossiers/$id',
+  path: '/dossiers/$id',
+  getParentRoute: () => AideLogementRoute,
+} as any)
+const ApiPublicAideHooksStocksAlertesRoute =
+  ApiPublicAideHooksStocksAlertesRouteImport.update({
+    id: '/api/public/aide/hooks/stocks-alertes',
+    path: '/api/public/aide/hooks/stocks-alertes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAideHooksRdvRappelsRoute =
+  ApiPublicAideHooksRdvRappelsRouteImport.update({
+    id: '/api/public/aide/hooks/rdv-rappels',
+    path: '/api/public/aide/hooks/rdv-rappels',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAideHooksAteliersRappelsRoute =
+  ApiPublicAideHooksAteliersRappelsRouteImport.update({
+    id: '/api/public/aide/hooks/ateliers-rappels',
+    path: '/api/public/aide/hooks/ateliers-rappels',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/aide': typeof AideRoute
+  '/aide': typeof AideRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/aide/annuaire': typeof AideAnnuaireRoute
+  '/aide/ateliers': typeof AideAteliersRoute
+  '/aide/calendrier': typeof AideCalendrierRoute
+  '/aide/demandes-evolution': typeof AideDemandesEvolutionRoute
+  '/aide/dons': typeof AideDonsRoute
+  '/aide/exports': typeof AideExportsRoute
+  '/aide/logement': typeof AideLogementRouteWithChildren
+  '/aide/messagerie': typeof AideMessagerieRoute
+  '/aide/notifications': typeof AideNotificationsRoute
+  '/aide/parametres': typeof AideParametresRoute
+  '/aide/rendez-vous': typeof AideRendezVousRoute
+  '/aide/': typeof AideIndexRoute
+  '/aide/admin/audit': typeof AideAdminAuditRoute
+  '/aide/admin/coups-pouce': typeof AideAdminCoupsPouceRoute
+  '/aide/admin/demandes-evolution': typeof AideAdminDemandesEvolutionRoute
+  '/aide/admin/invitations-partenaires': typeof AideAdminInvitationsPartenairesRoute
+  '/aide/admin/logement-programmes': typeof AideAdminLogementProgrammesRoute
+  '/aide/admin/partenaires': typeof AideAdminPartenairesRoute
+  '/aide/admin/reorientation': typeof AideAdminReorientationRoute
+  '/aide/admin/rgpd': typeof AideAdminRgpdRoute
+  '/aide/admin/seuils': typeof AideAdminSeuilsRoute
+  '/aide/admin/structures': typeof AideAdminStructuresRoute
+  '/aide/admin/territoires': typeof AideAdminTerritoiresRoute
+  '/aide/admin/utilisateurs': typeof AideAdminUtilisateursRoute
+  '/aide/partenaire/coups-pouce': typeof AidePartenaireCoupsPouceRoute
+  '/aide/presto/exports': typeof AidePrestoExportsRoute
+  '/aide/presto/parametres': typeof AidePrestoParametresRoute
+  '/aide/usagers/$id': typeof AideUsagersIdRoute
+  '/aide/usagers/nouveau': typeof AideUsagersNouveauRoute
+  '/aide/logement/': typeof AideLogementIndexRoute
+  '/aide/partenaire/': typeof AidePartenaireIndexRoute
+  '/aide/presto/': typeof AidePrestoIndexRoute
+  '/aide/usagers/': typeof AideUsagersIndexRoute
+  '/aide/logement/dossiers/$id': typeof AideLogementDossiersIdRoute
+  '/aide/logement/programmes/$id': typeof AideLogementProgrammesIdRoute
+  '/api/public/aide/stats': typeof ApiPublicAideStatsRoute
   '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
+  '/api/public/aide/hooks/ateliers-rappels': typeof ApiPublicAideHooksAteliersRappelsRoute
+  '/api/public/aide/hooks/rdv-rappels': typeof ApiPublicAideHooksRdvRappelsRoute
+  '/api/public/aide/hooks/stocks-alertes': typeof ApiPublicAideHooksStocksAlertesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/aide': typeof AideRoute
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/aide/annuaire': typeof AideAnnuaireRoute
+  '/aide/ateliers': typeof AideAteliersRoute
+  '/aide/calendrier': typeof AideCalendrierRoute
+  '/aide/demandes-evolution': typeof AideDemandesEvolutionRoute
+  '/aide/dons': typeof AideDonsRoute
+  '/aide/exports': typeof AideExportsRoute
+  '/aide/messagerie': typeof AideMessagerieRoute
+  '/aide/notifications': typeof AideNotificationsRoute
+  '/aide/parametres': typeof AideParametresRoute
+  '/aide/rendez-vous': typeof AideRendezVousRoute
+  '/aide': typeof AideIndexRoute
+  '/aide/admin/audit': typeof AideAdminAuditRoute
+  '/aide/admin/coups-pouce': typeof AideAdminCoupsPouceRoute
+  '/aide/admin/demandes-evolution': typeof AideAdminDemandesEvolutionRoute
+  '/aide/admin/invitations-partenaires': typeof AideAdminInvitationsPartenairesRoute
+  '/aide/admin/logement-programmes': typeof AideAdminLogementProgrammesRoute
+  '/aide/admin/partenaires': typeof AideAdminPartenairesRoute
+  '/aide/admin/reorientation': typeof AideAdminReorientationRoute
+  '/aide/admin/rgpd': typeof AideAdminRgpdRoute
+  '/aide/admin/seuils': typeof AideAdminSeuilsRoute
+  '/aide/admin/structures': typeof AideAdminStructuresRoute
+  '/aide/admin/territoires': typeof AideAdminTerritoiresRoute
+  '/aide/admin/utilisateurs': typeof AideAdminUtilisateursRoute
+  '/aide/partenaire/coups-pouce': typeof AidePartenaireCoupsPouceRoute
+  '/aide/presto/exports': typeof AidePrestoExportsRoute
+  '/aide/presto/parametres': typeof AidePrestoParametresRoute
+  '/aide/usagers/$id': typeof AideUsagersIdRoute
+  '/aide/usagers/nouveau': typeof AideUsagersNouveauRoute
+  '/aide/logement': typeof AideLogementIndexRoute
+  '/aide/partenaire': typeof AidePartenaireIndexRoute
+  '/aide/presto': typeof AidePrestoIndexRoute
+  '/aide/usagers': typeof AideUsagersIndexRoute
+  '/aide/logement/dossiers/$id': typeof AideLogementDossiersIdRoute
+  '/aide/logement/programmes/$id': typeof AideLogementProgrammesIdRoute
+  '/api/public/aide/stats': typeof ApiPublicAideStatsRoute
   '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
+  '/api/public/aide/hooks/ateliers-rappels': typeof ApiPublicAideHooksAteliersRappelsRoute
+  '/api/public/aide/hooks/rdv-rappels': typeof ApiPublicAideHooksRdvRappelsRoute
+  '/api/public/aide/hooks/stocks-alertes': typeof ApiPublicAideHooksStocksAlertesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/aide': typeof AideRoute
+  '/aide': typeof AideRouteWithChildren
   '/login': typeof LoginRoute
   '/admin/$app': typeof AdminAppRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/security': typeof AdminSecurityRoute
+  '/aide/annuaire': typeof AideAnnuaireRoute
+  '/aide/ateliers': typeof AideAteliersRoute
+  '/aide/calendrier': typeof AideCalendrierRoute
+  '/aide/demandes-evolution': typeof AideDemandesEvolutionRoute
+  '/aide/dons': typeof AideDonsRoute
+  '/aide/exports': typeof AideExportsRoute
+  '/aide/logement': typeof AideLogementRouteWithChildren
+  '/aide/messagerie': typeof AideMessagerieRoute
+  '/aide/notifications': typeof AideNotificationsRoute
+  '/aide/parametres': typeof AideParametresRoute
+  '/aide/rendez-vous': typeof AideRendezVousRoute
+  '/aide/': typeof AideIndexRoute
+  '/aide/admin/audit': typeof AideAdminAuditRoute
+  '/aide/admin/coups-pouce': typeof AideAdminCoupsPouceRoute
+  '/aide/admin/demandes-evolution': typeof AideAdminDemandesEvolutionRoute
+  '/aide/admin/invitations-partenaires': typeof AideAdminInvitationsPartenairesRoute
+  '/aide/admin/logement-programmes': typeof AideAdminLogementProgrammesRoute
+  '/aide/admin/partenaires': typeof AideAdminPartenairesRoute
+  '/aide/admin/reorientation': typeof AideAdminReorientationRoute
+  '/aide/admin/rgpd': typeof AideAdminRgpdRoute
+  '/aide/admin/seuils': typeof AideAdminSeuilsRoute
+  '/aide/admin/structures': typeof AideAdminStructuresRoute
+  '/aide/admin/territoires': typeof AideAdminTerritoiresRoute
+  '/aide/admin/utilisateurs': typeof AideAdminUtilisateursRoute
+  '/aide/partenaire/coups-pouce': typeof AidePartenaireCoupsPouceRoute
+  '/aide/presto/exports': typeof AidePrestoExportsRoute
+  '/aide/presto/parametres': typeof AidePrestoParametresRoute
+  '/aide/usagers/$id': typeof AideUsagersIdRoute
+  '/aide/usagers/nouveau': typeof AideUsagersNouveauRoute
+  '/aide/logement/': typeof AideLogementIndexRoute
+  '/aide/partenaire/': typeof AidePartenaireIndexRoute
+  '/aide/presto/': typeof AidePrestoIndexRoute
+  '/aide/usagers/': typeof AideUsagersIndexRoute
+  '/aide/logement/dossiers/$id': typeof AideLogementDossiersIdRoute
+  '/aide/logement/programmes/$id': typeof AideLogementProgrammesIdRoute
+  '/api/public/aide/stats': typeof ApiPublicAideStatsRoute
   '/api/public/roles/sync': typeof ApiPublicRolesSyncRoute
+  '/api/public/aide/hooks/ateliers-rappels': typeof ApiPublicAideHooksAteliersRappelsRoute
+  '/api/public/aide/hooks/rdv-rappels': typeof ApiPublicAideHooksRdvRappelsRoute
+  '/api/public/aide/hooks/stocks-alertes': typeof ApiPublicAideHooksStocksAlertesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,16 +447,92 @@ export interface FileRouteTypes {
     | '/admin/$app'
     | '/admin/audit'
     | '/admin/security'
+    | '/aide/annuaire'
+    | '/aide/ateliers'
+    | '/aide/calendrier'
+    | '/aide/demandes-evolution'
+    | '/aide/dons'
+    | '/aide/exports'
+    | '/aide/logement'
+    | '/aide/messagerie'
+    | '/aide/notifications'
+    | '/aide/parametres'
+    | '/aide/rendez-vous'
+    | '/aide/'
+    | '/aide/admin/audit'
+    | '/aide/admin/coups-pouce'
+    | '/aide/admin/demandes-evolution'
+    | '/aide/admin/invitations-partenaires'
+    | '/aide/admin/logement-programmes'
+    | '/aide/admin/partenaires'
+    | '/aide/admin/reorientation'
+    | '/aide/admin/rgpd'
+    | '/aide/admin/seuils'
+    | '/aide/admin/structures'
+    | '/aide/admin/territoires'
+    | '/aide/admin/utilisateurs'
+    | '/aide/partenaire/coups-pouce'
+    | '/aide/presto/exports'
+    | '/aide/presto/parametres'
+    | '/aide/usagers/$id'
+    | '/aide/usagers/nouveau'
+    | '/aide/logement/'
+    | '/aide/partenaire/'
+    | '/aide/presto/'
+    | '/aide/usagers/'
+    | '/aide/logement/dossiers/$id'
+    | '/aide/logement/programmes/$id'
+    | '/api/public/aide/stats'
     | '/api/public/roles/sync'
+    | '/api/public/aide/hooks/ateliers-rappels'
+    | '/api/public/aide/hooks/rdv-rappels'
+    | '/api/public/aide/hooks/stocks-alertes'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/aide'
     | '/login'
     | '/admin/$app'
     | '/admin/audit'
     | '/admin/security'
+    | '/aide/annuaire'
+    | '/aide/ateliers'
+    | '/aide/calendrier'
+    | '/aide/demandes-evolution'
+    | '/aide/dons'
+    | '/aide/exports'
+    | '/aide/messagerie'
+    | '/aide/notifications'
+    | '/aide/parametres'
+    | '/aide/rendez-vous'
+    | '/aide'
+    | '/aide/admin/audit'
+    | '/aide/admin/coups-pouce'
+    | '/aide/admin/demandes-evolution'
+    | '/aide/admin/invitations-partenaires'
+    | '/aide/admin/logement-programmes'
+    | '/aide/admin/partenaires'
+    | '/aide/admin/reorientation'
+    | '/aide/admin/rgpd'
+    | '/aide/admin/seuils'
+    | '/aide/admin/structures'
+    | '/aide/admin/territoires'
+    | '/aide/admin/utilisateurs'
+    | '/aide/partenaire/coups-pouce'
+    | '/aide/presto/exports'
+    | '/aide/presto/parametres'
+    | '/aide/usagers/$id'
+    | '/aide/usagers/nouveau'
+    | '/aide/logement'
+    | '/aide/partenaire'
+    | '/aide/presto'
+    | '/aide/usagers'
+    | '/aide/logement/dossiers/$id'
+    | '/aide/logement/programmes/$id'
+    | '/api/public/aide/stats'
     | '/api/public/roles/sync'
+    | '/api/public/aide/hooks/ateliers-rappels'
+    | '/api/public/aide/hooks/rdv-rappels'
+    | '/api/public/aide/hooks/stocks-alertes'
   id:
     | '__root__'
     | '/'
@@ -108,17 +541,60 @@ export interface FileRouteTypes {
     | '/admin/$app'
     | '/admin/audit'
     | '/admin/security'
+    | '/aide/annuaire'
+    | '/aide/ateliers'
+    | '/aide/calendrier'
+    | '/aide/demandes-evolution'
+    | '/aide/dons'
+    | '/aide/exports'
+    | '/aide/logement'
+    | '/aide/messagerie'
+    | '/aide/notifications'
+    | '/aide/parametres'
+    | '/aide/rendez-vous'
+    | '/aide/'
+    | '/aide/admin/audit'
+    | '/aide/admin/coups-pouce'
+    | '/aide/admin/demandes-evolution'
+    | '/aide/admin/invitations-partenaires'
+    | '/aide/admin/logement-programmes'
+    | '/aide/admin/partenaires'
+    | '/aide/admin/reorientation'
+    | '/aide/admin/rgpd'
+    | '/aide/admin/seuils'
+    | '/aide/admin/structures'
+    | '/aide/admin/territoires'
+    | '/aide/admin/utilisateurs'
+    | '/aide/partenaire/coups-pouce'
+    | '/aide/presto/exports'
+    | '/aide/presto/parametres'
+    | '/aide/usagers/$id'
+    | '/aide/usagers/nouveau'
+    | '/aide/logement/'
+    | '/aide/partenaire/'
+    | '/aide/presto/'
+    | '/aide/usagers/'
+    | '/aide/logement/dossiers/$id'
+    | '/aide/logement/programmes/$id'
+    | '/api/public/aide/stats'
     | '/api/public/roles/sync'
+    | '/api/public/aide/hooks/ateliers-rappels'
+    | '/api/public/aide/hooks/rdv-rappels'
+    | '/api/public/aide/hooks/stocks-alertes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AideRoute: typeof AideRoute
+  AideRoute: typeof AideRouteWithChildren
   LoginRoute: typeof LoginRoute
   AdminAppRoute: typeof AdminAppRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminSecurityRoute: typeof AdminSecurityRoute
+  ApiPublicAideStatsRoute: typeof ApiPublicAideStatsRoute
   ApiPublicRolesSyncRoute: typeof ApiPublicRolesSyncRoute
+  ApiPublicAideHooksAteliersRappelsRoute: typeof ApiPublicAideHooksAteliersRappelsRoute
+  ApiPublicAideHooksRdvRappelsRoute: typeof ApiPublicAideHooksRdvRappelsRoute
+  ApiPublicAideHooksStocksAlertesRoute: typeof ApiPublicAideHooksStocksAlertesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -144,6 +620,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aide/': {
+      id: '/aide/'
+      path: '/'
+      fullPath: '/aide/'
+      preLoaderRoute: typeof AideIndexRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/rendez-vous': {
+      id: '/aide/rendez-vous'
+      path: '/rendez-vous'
+      fullPath: '/aide/rendez-vous'
+      preLoaderRoute: typeof AideRendezVousRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/parametres': {
+      id: '/aide/parametres'
+      path: '/parametres'
+      fullPath: '/aide/parametres'
+      preLoaderRoute: typeof AideParametresRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/notifications': {
+      id: '/aide/notifications'
+      path: '/notifications'
+      fullPath: '/aide/notifications'
+      preLoaderRoute: typeof AideNotificationsRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/messagerie': {
+      id: '/aide/messagerie'
+      path: '/messagerie'
+      fullPath: '/aide/messagerie'
+      preLoaderRoute: typeof AideMessagerieRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/logement': {
+      id: '/aide/logement'
+      path: '/logement'
+      fullPath: '/aide/logement'
+      preLoaderRoute: typeof AideLogementRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/exports': {
+      id: '/aide/exports'
+      path: '/exports'
+      fullPath: '/aide/exports'
+      preLoaderRoute: typeof AideExportsRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/dons': {
+      id: '/aide/dons'
+      path: '/dons'
+      fullPath: '/aide/dons'
+      preLoaderRoute: typeof AideDonsRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/demandes-evolution': {
+      id: '/aide/demandes-evolution'
+      path: '/demandes-evolution'
+      fullPath: '/aide/demandes-evolution'
+      preLoaderRoute: typeof AideDemandesEvolutionRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/calendrier': {
+      id: '/aide/calendrier'
+      path: '/calendrier'
+      fullPath: '/aide/calendrier'
+      preLoaderRoute: typeof AideCalendrierRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/ateliers': {
+      id: '/aide/ateliers'
+      path: '/ateliers'
+      fullPath: '/aide/ateliers'
+      preLoaderRoute: typeof AideAteliersRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/annuaire': {
+      id: '/aide/annuaire'
+      path: '/annuaire'
+      fullPath: '/aide/annuaire'
+      preLoaderRoute: typeof AideAnnuaireRouteImport
+      parentRoute: typeof AideRoute
+    }
     '/admin/security': {
       id: '/admin/security'
       path: '/admin/security'
@@ -165,6 +725,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aide/usagers/': {
+      id: '/aide/usagers/'
+      path: '/usagers'
+      fullPath: '/aide/usagers/'
+      preLoaderRoute: typeof AideUsagersIndexRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/presto/': {
+      id: '/aide/presto/'
+      path: '/presto'
+      fullPath: '/aide/presto/'
+      preLoaderRoute: typeof AidePrestoIndexRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/partenaire/': {
+      id: '/aide/partenaire/'
+      path: '/partenaire'
+      fullPath: '/aide/partenaire/'
+      preLoaderRoute: typeof AidePartenaireIndexRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/logement/': {
+      id: '/aide/logement/'
+      path: '/'
+      fullPath: '/aide/logement/'
+      preLoaderRoute: typeof AideLogementIndexRouteImport
+      parentRoute: typeof AideLogementRoute
+    }
+    '/aide/usagers/nouveau': {
+      id: '/aide/usagers/nouveau'
+      path: '/usagers/nouveau'
+      fullPath: '/aide/usagers/nouveau'
+      preLoaderRoute: typeof AideUsagersNouveauRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/usagers/$id': {
+      id: '/aide/usagers/$id'
+      path: '/usagers/$id'
+      fullPath: '/aide/usagers/$id'
+      preLoaderRoute: typeof AideUsagersIdRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/presto/parametres': {
+      id: '/aide/presto/parametres'
+      path: '/presto/parametres'
+      fullPath: '/aide/presto/parametres'
+      preLoaderRoute: typeof AidePrestoParametresRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/presto/exports': {
+      id: '/aide/presto/exports'
+      path: '/presto/exports'
+      fullPath: '/aide/presto/exports'
+      preLoaderRoute: typeof AidePrestoExportsRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/partenaire/coups-pouce': {
+      id: '/aide/partenaire/coups-pouce'
+      path: '/partenaire/coups-pouce'
+      fullPath: '/aide/partenaire/coups-pouce'
+      preLoaderRoute: typeof AidePartenaireCoupsPouceRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/utilisateurs': {
+      id: '/aide/admin/utilisateurs'
+      path: '/admin/utilisateurs'
+      fullPath: '/aide/admin/utilisateurs'
+      preLoaderRoute: typeof AideAdminUtilisateursRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/territoires': {
+      id: '/aide/admin/territoires'
+      path: '/admin/territoires'
+      fullPath: '/aide/admin/territoires'
+      preLoaderRoute: typeof AideAdminTerritoiresRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/structures': {
+      id: '/aide/admin/structures'
+      path: '/admin/structures'
+      fullPath: '/aide/admin/structures'
+      preLoaderRoute: typeof AideAdminStructuresRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/seuils': {
+      id: '/aide/admin/seuils'
+      path: '/admin/seuils'
+      fullPath: '/aide/admin/seuils'
+      preLoaderRoute: typeof AideAdminSeuilsRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/rgpd': {
+      id: '/aide/admin/rgpd'
+      path: '/admin/rgpd'
+      fullPath: '/aide/admin/rgpd'
+      preLoaderRoute: typeof AideAdminRgpdRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/reorientation': {
+      id: '/aide/admin/reorientation'
+      path: '/admin/reorientation'
+      fullPath: '/aide/admin/reorientation'
+      preLoaderRoute: typeof AideAdminReorientationRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/partenaires': {
+      id: '/aide/admin/partenaires'
+      path: '/admin/partenaires'
+      fullPath: '/aide/admin/partenaires'
+      preLoaderRoute: typeof AideAdminPartenairesRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/logement-programmes': {
+      id: '/aide/admin/logement-programmes'
+      path: '/admin/logement-programmes'
+      fullPath: '/aide/admin/logement-programmes'
+      preLoaderRoute: typeof AideAdminLogementProgrammesRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/invitations-partenaires': {
+      id: '/aide/admin/invitations-partenaires'
+      path: '/admin/invitations-partenaires'
+      fullPath: '/aide/admin/invitations-partenaires'
+      preLoaderRoute: typeof AideAdminInvitationsPartenairesRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/demandes-evolution': {
+      id: '/aide/admin/demandes-evolution'
+      path: '/admin/demandes-evolution'
+      fullPath: '/aide/admin/demandes-evolution'
+      preLoaderRoute: typeof AideAdminDemandesEvolutionRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/coups-pouce': {
+      id: '/aide/admin/coups-pouce'
+      path: '/admin/coups-pouce'
+      fullPath: '/aide/admin/coups-pouce'
+      preLoaderRoute: typeof AideAdminCoupsPouceRouteImport
+      parentRoute: typeof AideRoute
+    }
+    '/aide/admin/audit': {
+      id: '/aide/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/aide/admin/audit'
+      preLoaderRoute: typeof AideAdminAuditRouteImport
+      parentRoute: typeof AideRoute
+    }
     '/api/public/roles/sync': {
       id: '/api/public/roles/sync'
       path: '/api/public/roles/sync'
@@ -172,17 +879,152 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicRolesSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/aide/stats': {
+      id: '/api/public/aide/stats'
+      path: '/api/public/aide/stats'
+      fullPath: '/api/public/aide/stats'
+      preLoaderRoute: typeof ApiPublicAideStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aide/logement/programmes/$id': {
+      id: '/aide/logement/programmes/$id'
+      path: '/programmes/$id'
+      fullPath: '/aide/logement/programmes/$id'
+      preLoaderRoute: typeof AideLogementProgrammesIdRouteImport
+      parentRoute: typeof AideLogementRoute
+    }
+    '/aide/logement/dossiers/$id': {
+      id: '/aide/logement/dossiers/$id'
+      path: '/dossiers/$id'
+      fullPath: '/aide/logement/dossiers/$id'
+      preLoaderRoute: typeof AideLogementDossiersIdRouteImport
+      parentRoute: typeof AideLogementRoute
+    }
+    '/api/public/aide/hooks/stocks-alertes': {
+      id: '/api/public/aide/hooks/stocks-alertes'
+      path: '/api/public/aide/hooks/stocks-alertes'
+      fullPath: '/api/public/aide/hooks/stocks-alertes'
+      preLoaderRoute: typeof ApiPublicAideHooksStocksAlertesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/aide/hooks/rdv-rappels': {
+      id: '/api/public/aide/hooks/rdv-rappels'
+      path: '/api/public/aide/hooks/rdv-rappels'
+      fullPath: '/api/public/aide/hooks/rdv-rappels'
+      preLoaderRoute: typeof ApiPublicAideHooksRdvRappelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/aide/hooks/ateliers-rappels': {
+      id: '/api/public/aide/hooks/ateliers-rappels'
+      path: '/api/public/aide/hooks/ateliers-rappels'
+      fullPath: '/api/public/aide/hooks/ateliers-rappels'
+      preLoaderRoute: typeof ApiPublicAideHooksAteliersRappelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AideLogementRouteChildren {
+  AideLogementIndexRoute: typeof AideLogementIndexRoute
+  AideLogementDossiersIdRoute: typeof AideLogementDossiersIdRoute
+  AideLogementProgrammesIdRoute: typeof AideLogementProgrammesIdRoute
+}
+
+const AideLogementRouteChildren: AideLogementRouteChildren = {
+  AideLogementIndexRoute: AideLogementIndexRoute,
+  AideLogementDossiersIdRoute: AideLogementDossiersIdRoute,
+  AideLogementProgrammesIdRoute: AideLogementProgrammesIdRoute,
+}
+
+const AideLogementRouteWithChildren = AideLogementRoute._addFileChildren(
+  AideLogementRouteChildren,
+)
+
+interface AideRouteChildren {
+  AideAnnuaireRoute: typeof AideAnnuaireRoute
+  AideAteliersRoute: typeof AideAteliersRoute
+  AideCalendrierRoute: typeof AideCalendrierRoute
+  AideDemandesEvolutionRoute: typeof AideDemandesEvolutionRoute
+  AideDonsRoute: typeof AideDonsRoute
+  AideExportsRoute: typeof AideExportsRoute
+  AideLogementRoute: typeof AideLogementRouteWithChildren
+  AideMessagerieRoute: typeof AideMessagerieRoute
+  AideNotificationsRoute: typeof AideNotificationsRoute
+  AideParametresRoute: typeof AideParametresRoute
+  AideRendezVousRoute: typeof AideRendezVousRoute
+  AideIndexRoute: typeof AideIndexRoute
+  AideAdminAuditRoute: typeof AideAdminAuditRoute
+  AideAdminCoupsPouceRoute: typeof AideAdminCoupsPouceRoute
+  AideAdminDemandesEvolutionRoute: typeof AideAdminDemandesEvolutionRoute
+  AideAdminInvitationsPartenairesRoute: typeof AideAdminInvitationsPartenairesRoute
+  AideAdminLogementProgrammesRoute: typeof AideAdminLogementProgrammesRoute
+  AideAdminPartenairesRoute: typeof AideAdminPartenairesRoute
+  AideAdminReorientationRoute: typeof AideAdminReorientationRoute
+  AideAdminRgpdRoute: typeof AideAdminRgpdRoute
+  AideAdminSeuilsRoute: typeof AideAdminSeuilsRoute
+  AideAdminStructuresRoute: typeof AideAdminStructuresRoute
+  AideAdminTerritoiresRoute: typeof AideAdminTerritoiresRoute
+  AideAdminUtilisateursRoute: typeof AideAdminUtilisateursRoute
+  AidePartenaireCoupsPouceRoute: typeof AidePartenaireCoupsPouceRoute
+  AidePrestoExportsRoute: typeof AidePrestoExportsRoute
+  AidePrestoParametresRoute: typeof AidePrestoParametresRoute
+  AideUsagersIdRoute: typeof AideUsagersIdRoute
+  AideUsagersNouveauRoute: typeof AideUsagersNouveauRoute
+  AidePartenaireIndexRoute: typeof AidePartenaireIndexRoute
+  AidePrestoIndexRoute: typeof AidePrestoIndexRoute
+  AideUsagersIndexRoute: typeof AideUsagersIndexRoute
+}
+
+const AideRouteChildren: AideRouteChildren = {
+  AideAnnuaireRoute: AideAnnuaireRoute,
+  AideAteliersRoute: AideAteliersRoute,
+  AideCalendrierRoute: AideCalendrierRoute,
+  AideDemandesEvolutionRoute: AideDemandesEvolutionRoute,
+  AideDonsRoute: AideDonsRoute,
+  AideExportsRoute: AideExportsRoute,
+  AideLogementRoute: AideLogementRouteWithChildren,
+  AideMessagerieRoute: AideMessagerieRoute,
+  AideNotificationsRoute: AideNotificationsRoute,
+  AideParametresRoute: AideParametresRoute,
+  AideRendezVousRoute: AideRendezVousRoute,
+  AideIndexRoute: AideIndexRoute,
+  AideAdminAuditRoute: AideAdminAuditRoute,
+  AideAdminCoupsPouceRoute: AideAdminCoupsPouceRoute,
+  AideAdminDemandesEvolutionRoute: AideAdminDemandesEvolutionRoute,
+  AideAdminInvitationsPartenairesRoute: AideAdminInvitationsPartenairesRoute,
+  AideAdminLogementProgrammesRoute: AideAdminLogementProgrammesRoute,
+  AideAdminPartenairesRoute: AideAdminPartenairesRoute,
+  AideAdminReorientationRoute: AideAdminReorientationRoute,
+  AideAdminRgpdRoute: AideAdminRgpdRoute,
+  AideAdminSeuilsRoute: AideAdminSeuilsRoute,
+  AideAdminStructuresRoute: AideAdminStructuresRoute,
+  AideAdminTerritoiresRoute: AideAdminTerritoiresRoute,
+  AideAdminUtilisateursRoute: AideAdminUtilisateursRoute,
+  AidePartenaireCoupsPouceRoute: AidePartenaireCoupsPouceRoute,
+  AidePrestoExportsRoute: AidePrestoExportsRoute,
+  AidePrestoParametresRoute: AidePrestoParametresRoute,
+  AideUsagersIdRoute: AideUsagersIdRoute,
+  AideUsagersNouveauRoute: AideUsagersNouveauRoute,
+  AidePartenaireIndexRoute: AidePartenaireIndexRoute,
+  AidePrestoIndexRoute: AidePrestoIndexRoute,
+  AideUsagersIndexRoute: AideUsagersIndexRoute,
+}
+
+const AideRouteWithChildren = AideRoute._addFileChildren(AideRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AideRoute: AideRoute,
+  AideRoute: AideRouteWithChildren,
   LoginRoute: LoginRoute,
   AdminAppRoute: AdminAppRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminSecurityRoute: AdminSecurityRoute,
+  ApiPublicAideStatsRoute: ApiPublicAideStatsRoute,
   ApiPublicRolesSyncRoute: ApiPublicRolesSyncRoute,
+  ApiPublicAideHooksAteliersRappelsRoute:
+    ApiPublicAideHooksAteliersRappelsRoute,
+  ApiPublicAideHooksRdvRappelsRoute: ApiPublicAideHooksRdvRappelsRoute,
+  ApiPublicAideHooksStocksAlertesRoute: ApiPublicAideHooksStocksAlertesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { formatDate } from "@/lib/labels";
 
-export const Route = createFileRoute("/_app/admin/demandes-evolution")({
+export const Route = createFileRoute("/aide/admin/demandes-evolution")({
   component: AdminDemandesEvolutionPage,
 });
 

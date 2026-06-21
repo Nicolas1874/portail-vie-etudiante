@@ -28,7 +28,7 @@ import { Link } from "@tanstack/react-router";
 import { formatDateTime, fullName } from "@/lib/labels";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/messagerie")({
+export const Route = createFileRoute("/aide/messagerie")({
   component: MessageriePage,
 });
 

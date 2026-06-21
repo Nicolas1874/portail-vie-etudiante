@@ -29,7 +29,7 @@ import { UserPlus, Pencil } from "lucide-react";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/_app/admin/utilisateurs")({
+export const Route = createFileRoute("/aide/admin/utilisateurs")({
   component: UsersAdmin,
 });
 

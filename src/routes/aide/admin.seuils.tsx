@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Save, Sliders } from "lucide-react";
 
-export const Route = createFileRoute("/_app/admin/seuils")({
+export const Route = createFileRoute("/aide/admin/seuils")({
   component: SeuilsPage,
 });
 

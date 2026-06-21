@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Plus, Trash2, Save, Info } from "lucide-react";
 
-export const Route = createFileRoute("/_app/admin/reorientation")({
+export const Route = createFileRoute("/aide/admin/reorientation")({
   component: AdminReorientationPage,
 });
 

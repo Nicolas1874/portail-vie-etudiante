@@ -13,7 +13,7 @@ import {
 } from "date-fns";
 import { fr } from "date-fns/locale";
 
-export const Route = createFileRoute("/_app/calendrier")({
+export const Route = createFileRoute("/aide/calendrier")({
   component: CalendrierPage,
 });
 

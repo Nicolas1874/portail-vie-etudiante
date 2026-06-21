@@ -23,7 +23,7 @@ import { genererRapportAnnuel } from "@/lib/rapport-annuel";
 import { genererRapportBilanPptx, genererRapportComparaisonPptx } from "@/lib/rapport-annuel-pptx";
 
 
-export const Route = createFileRoute("/_app/exports")({
+export const Route = createFileRoute("/aide/exports")({
   component: ExportsPage,
 });
 

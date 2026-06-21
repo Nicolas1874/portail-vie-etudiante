@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDateTime } from "@/lib/labels";
 import { Bell, Check, ChevronDown, ChevronRight, Calendar, Package, Megaphone } from "lucide-react";
 
-export const Route = createFileRoute("/_app/notifications")({
+export const Route = createFileRoute("/aide/notifications")({
   component: NotifPage,
 });
 

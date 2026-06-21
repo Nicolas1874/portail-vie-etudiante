@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/admin/partenaires")({
+export const Route = createFileRoute("/aide/admin/partenaires")({
   component: AdminPartenaires,
 });
 

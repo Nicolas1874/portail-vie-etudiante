@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 
-export const Route = createFileRoute("/_app/presto/parametres")({
+export const Route = createFileRoute("/aide/presto/parametres")({
   component: PrestoParametres,
 });
 

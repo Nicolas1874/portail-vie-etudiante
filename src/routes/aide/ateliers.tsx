@@ -30,7 +30,7 @@ import { formatDateTime } from "@/lib/labels";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/ateliers")({
+export const Route = createFileRoute("/aide/ateliers")({
   component: AteliersPage,
 });
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-export const Route = createFileRoute("/api/public/hooks/ateliers-rappels")({
+export const Route = createFileRoute("/api/public/aide/hooks/ateliers-rappels")({
   server: {
     handlers: {
       POST: async () => {

@@ -43,7 +43,7 @@ const STATUTS: Record<string, string> = {
   cloture: "Clôturé",
 };
 
-export const Route = createFileRoute("/_app/partenaire/coups-pouce")({
+export const Route = createFileRoute("/aide/partenaire/coups-pouce")({
   component: PartenaireCoupsPouce,
 });
 

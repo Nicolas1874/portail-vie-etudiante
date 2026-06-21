@@ -26,7 +26,7 @@ import {
 } from "@/lib/labels";
 import { StatusBadge } from "@/components/StatusBadge";
 
-export const Route = createFileRoute("/_app/logement/")({
+export const Route = createFileRoute("/aide/logement/")({
   component: LogementPage,
 });
 

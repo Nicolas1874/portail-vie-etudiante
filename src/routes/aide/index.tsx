@@ -16,7 +16,7 @@ import { ActionCard } from "@/components/dashboard/ActionCard";
 import { RecentRequests } from "@/components/dashboard/RecentRequests";
 import { Calendar } from "@/components/dashboard/Calendar";
 
-export const Route = createFileRoute("/aide")({
+export const Route = createFileRoute("/aide/")({
   component: Dashboard,
 });
 

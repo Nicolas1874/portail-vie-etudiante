@@ -10,7 +10,7 @@ import { HandCoins, Clock, CheckCircle2, XCircle, TrendingUp, Download } from "l
 import { downloadXlsx } from "@/lib/xlsx-export";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/partenaire/")({
+export const Route = createFileRoute("/aide/partenaire/")({
   component: PartenaireDashboard,
 });
 

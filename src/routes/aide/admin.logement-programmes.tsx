@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/admin/logement-programmes")({
+export const Route = createFileRoute("/aide/admin/logement-programmes")({
   component: AdminLogementProgrammes,
 });
 

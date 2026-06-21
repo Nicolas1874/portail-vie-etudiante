@@ -31,7 +31,7 @@ import {
 import { BesoinPromptDialog } from "@/components/BesoinPromptDialog";
 import { ReorienterDialog } from "@/components/usager/ReorienterDialog";
 
-export const Route = createFileRoute("/_app/usagers/nouveau")({
+export const Route = createFileRoute("/aide/usagers/nouveau")({
   component: NewUsager,
 });
 

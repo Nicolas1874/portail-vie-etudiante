@@ -15,7 +15,7 @@ import {
 import { Search, MapPin, Phone, Mail, Globe, Building2, Briefcase } from "lucide-react";
 import { useTerritoireScope } from "@/lib/territoire-scope";
 
-export const Route = createFileRoute("/_app/annuaire")({
+export const Route = createFileRoute("/aide/annuaire")({
   component: Annuaire,
 });
 

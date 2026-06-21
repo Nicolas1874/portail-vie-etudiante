@@ -7,7 +7,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  *
  * GET /api/public/stats[?annee=2025&territoire_id=...]
  */
-export const Route = createFileRoute("/api/public/stats")({
+export const Route = createFileRoute("/api/public/aide/stats")({
   server: {
     handlers: {
       OPTIONS: () =>

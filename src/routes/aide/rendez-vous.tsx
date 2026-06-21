@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { MODALITES_RDV, STATUTS_RDV, formatDateTime, fullName } from "@/lib/labels";
 
-export const Route = createFileRoute("/_app/rendez-vous")({
+export const Route = createFileRoute("/aide/rendez-vous")({
   component: RdvList,
 });
 

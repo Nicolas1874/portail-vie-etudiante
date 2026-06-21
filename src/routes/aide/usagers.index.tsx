@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth";
 import { useTerritoireScope } from "@/lib/territoire-scope";
 
-export const Route = createFileRoute("/_app/usagers/")({
+export const Route = createFileRoute("/aide/usagers/")({
   component: ListUsagers,
 });
 

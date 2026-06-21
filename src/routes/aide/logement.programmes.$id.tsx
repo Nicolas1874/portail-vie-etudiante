@@ -9,7 +9,7 @@ import { Home, ArrowLeft, ExternalLink, Users, Printer } from "lucide-react";
 import { LOGEMENT_PROGRAMMES, LOGEMENT_STATUTS, formatDate, fullName } from "@/lib/labels";
 import { StatusBadge } from "@/components/StatusBadge";
 
-export const Route = createFileRoute("/_app/logement/programmes/$id")({
+export const Route = createFileRoute("/aide/logement/programmes/$id")({
   component: ProgrammeFiche,
 });
 

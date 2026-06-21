@@ -43,7 +43,7 @@ import { ChampsBuilder } from "@/components/coups-pouce/ChampsBuilder";
 import { DispositifPartenairesEditor } from "@/components/coups-pouce/DispositifPartenairesEditor";
 import { ImpersonateYtineraireButton } from "@/components/coups-pouce/ImpersonateYtineraireButton";
 
-export const Route = createFileRoute("/_app/admin/coups-pouce")({
+export const Route = createFileRoute("/aide/admin/coups-pouce")({
   component: AdminCoupsPouce,
 });
 

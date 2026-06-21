@@ -6,7 +6,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  *   1) Article dont le stock total <= seuil_alerte → notifier les agents de la structure (1x/jour max).
  *   2) Lot dont la date_peremption est dans <= 7 jours → notifier (1x/jour max).
  */
-export const Route = createFileRoute("/api/public/hooks/stocks-alertes")({
+export const Route = createFileRoute("/api/public/aide/hooks/stocks-alertes")({
   server: {
     handlers: {
       POST: async () => {

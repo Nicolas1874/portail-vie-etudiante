@@ -25,7 +25,7 @@ import { TYPES_STRUCTURE } from "@/lib/labels";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/admin/structures")({
+export const Route = createFileRoute("/aide/admin/structures")({
   component: StructuresPage,
 });
 

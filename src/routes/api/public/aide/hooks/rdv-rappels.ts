@@ -9,7 +9,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
  *
  * Idempotent : on ne notifie qu'une fois par horizon (colonnes reminder_*_sent_at).
  */
-export const Route = createFileRoute("/api/public/hooks/rdv-rappels")({
+export const Route = createFileRoute("/api/public/aide/hooks/rdv-rappels")({
   server: {
     handlers: {
       POST: async () => {

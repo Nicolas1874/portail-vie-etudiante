@@ -10,7 +10,7 @@ import { downloadXlsx } from "@/lib/xlsx-export";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
 
-export const Route = createFileRoute("/_app/presto/exports")({
+export const Route = createFileRoute("/aide/presto/exports")({
   component: PrestoExports,
 });
 

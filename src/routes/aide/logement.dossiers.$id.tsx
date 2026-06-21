@@ -36,7 +36,7 @@ import {
 import { StatusBadge } from "@/components/StatusBadge";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/logement/dossiers/$id")({
+export const Route = createFileRoute("/aide/logement/dossiers/$id")({
   validateSearch: (s: Record<string, unknown>) => ({
     print: typeof s.print === "string" ? s.print : undefined,
   }),

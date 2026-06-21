@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { toast } from "sonner";
 import { ShieldCheck, Trash2, Plus, AlertTriangle, Play } from "lucide-react";
 
-export const Route = createFileRoute("/_app/admin/rgpd")({
+export const Route = createFileRoute("/aide/admin/rgpd")({
   component: AdminRgpdPage,
 });
 

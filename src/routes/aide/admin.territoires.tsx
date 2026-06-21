@@ -18,7 +18,7 @@ import { Plus, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/admin/territoires")({
+export const Route = createFileRoute("/aide/admin/territoires")({
   component: TerritoiresPage,
 });
 

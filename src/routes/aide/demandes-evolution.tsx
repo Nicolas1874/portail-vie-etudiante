@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { Lightbulb, Plus, ThumbsUp, MessageSquare } from "lucide-react";
 import { formatDate } from "@/lib/labels";
 
-export const Route = createFileRoute("/_app/demandes-evolution")({
+export const Route = createFileRoute("/aide/demandes-evolution")({
   component: DemandesEvolutionPage,
 });
 

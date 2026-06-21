@@ -76,7 +76,7 @@ import { ReorienterDialog } from "@/components/usager/ReorienterDialog";
 import { UsagerSidePanel } from "@/components/usager/UsagerSidePanel";
 import { DemandesNonSatisfaitesSection } from "@/components/DemandesNonSatisfaitesSection";
 
-export const Route = createFileRoute("/_app/usagers/$id")({
+export const Route = createFileRoute("/aide/usagers/$id")({
   component: UsagerDetail,
 });
 

@@ -28,7 +28,7 @@ import { formatDateTime } from "@/lib/labels";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
-export const Route = createFileRoute("/_app/admin/invitations-partenaires")({
+export const Route = createFileRoute("/aide/admin/invitations-partenaires")({
   component: InvitationsPartenaires,
 });
 
