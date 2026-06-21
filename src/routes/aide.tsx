@@ -16,7 +16,7 @@ function AppLayout() {
 }
 
 function Guard() {
-  const { loading, profile, roles } = useAuth();
+  const { loading, profile } = useAuth();
   const loc = useLocation();
 
   if (loading) {
@@ -27,19 +27,14 @@ function Guard() {
     );
   }
 
-  if (!profile) return <Navigate to="/login" />;
-
-  // Superviseur "pur" : accès limité au tableau de bord, notifications et paramètres.
-  const isSuperviseurOnly =
-    roles.length > 0 && roles.every((r) => r === "superviseur");
-  if (isSuperviseurOnly) {
-    const allowed = ["/aide", "/aide/notifications", "/aide/parametres"];
-    const ok = allowed.some((p) =>
-      p === "/aide" ? loc.pathname === "/aide" || loc.pathname === "/aide/" : loc.pathname.startsWith(p),
-    );
-    if (!ok) return <Navigate to="/aide" />;
+  // Si l'utilisateur n'est pas trouvé dans le localStorage du Portail, on redirige vers le login
+  if (!profile) {
+    console.log("AIDE Guard: Pas de profil trouvé, redirection login");
+    return <Navigate to="/login" />;
   }
 
+  // On laisse passer tout le monde (puisqu'on a déjà filtré au niveau du Portail)
+  // Cela évite les boucles de redirection si les rôles internes de l'AIDE ne sont pas encore synchronisés
   return (
     <TerritoireScopeProvider>
       <AppShell>
@@ -48,4 +43,3 @@ function Guard() {
     </TerritoireScopeProvider>
   );
 }
-
