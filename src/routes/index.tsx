@@ -1,84 +1,78 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, LayoutDashboard, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const [debugInfo, setDebugInfo] = useState<any>({});
   const [user, setUser] = useState<any>(null);
-  const [applications, setApplications] = useState<any[]>([]);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
+    // On récupère TOUT ce qu'il y a dans la mémoire pour comprendre
+    const u = localStorage.getItem("user");
+    const a = localStorage.getItem("applications");
+    
+    setDebugInfo({
+      rawUser: u,
+      rawApps: a,
+      browser: navigator.userAgent
+    });
+
+    if (u && u !== "undefined" && u !== "null") {
       try {
-        const userData = JSON.parse(userStr);
-        setUser(userData);
-        
-        // On force l'affichage des tuiles si superadmin
-        if (userData.role && userData.role.toLowerCase() === 'superadmin') {
-          setApplications([
-            { name: "AIDE", code: "AIDE", url: "#" },
-            { name: "HANDICAP", code: "HANDICAP", url: "#" },
-            { name: "CVEC", code: "CVEC", url: "#" }
-          ]);
-        }
+        const parsedUser = JSON.parse(u);
+        setUser(parsedUser);
       } catch (e) {
-        console.error(e);
+        console.error("Erreur de lecture du JSON", e);
       }
     }
   }, []);
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Card className="p-8 text-center shadow-lg">
-          <LayoutDashboard className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-          <h1 className="text-xl font-bold mb-4">Portail Vie Étudiante</h1>
-          <Button onClick={() => window.location.href = "/login"} className="bg-blue-600">
-            <LogIn className="w-4 h-4 mr-2" /> Se connecter
-          </Button>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8 bg-white p-6 rounded-lg shadow-sm">
-          <div className="flex items-center gap-3">
-            <LayoutDashboard className="text-blue-600" />
-            <h1 className="text-2xl font-bold">Portail SI</h1>
+    <div style={{ padding: '20px', fontFamily: 'monospace', backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
+      <h1 style={{ color: '#2563eb' }}>🛠️ Debug Portail</h1>
+      
+      <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ccc' }}>
+        <h3>1. État de la session :</h3>
+        <p>Utilisateur détecté : <strong>{user ? "OUI ✅" : "NON ❌"}</strong></p>
+        {user && (
+          <div style={{ background: '#e0ffe0', padding: '10px' }}>
+            <p>Nom : {user.prenom} {user.nom}</p>
+            <p>Rôle : <strong>{user.role}</strong></p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="font-bold">{user.prenom} {user.nom}</p>
-              <p className="text-xs font-bold text-blue-600 uppercase">{user.role}</p>
-            </div>
-            <Button variant="outline" onClick={() => { localStorage.clear(); window.location.href = "/login"; }}>
-              Déconnexion
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {applications.map((app) => (
-            <Card key={app.code} className="border-t-4 border-t-blue-600">
-              <CardHeader><CardTitle>{app.name}</CardTitle></CardHeader>
-              <CardContent>
-                <Button className="w-full bg-blue-600" onClick={() => window.open(app.url, '_blank')}>
-                  Ouvrir
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        )}
       </div>
+
+      <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #ccc' }}>
+        <h3>2. Contenu brut de la mémoire (localStorage) :</h3>
+        <p><strong>Clé "user" :</strong></p>
+        <pre style={{ background: '#eee', padding: '10px', overflow: 'auto' }}>
+          {debugInfo.rawUser || "VIDE (null)"}
+        </pre>
+        
+        <p><strong>Clé "applications" :</strong></p>
+        <pre style={{ background: '#eee', padding: '10px', overflow: 'auto' }}>
+          {debugInfo.rawApps || "VIDE (null)"}
+        </pre>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={() => window.location.href = "/login"} style={{ padding: '10px', marginRight: '10px' }}>
+          Aller au Login
+        </button>
+        <button onClick={() => { localStorage.clear(); window.location.reload(); }} style={{ padding: '10px', color: 'red' }}>
+          Vider la mémoire et rafraîchir
+        </button>
+      </div>
+
+      {user && user.role && user.role.toLowerCase() === 'superadmin' && (
+        <div style={{ marginTop: '30px', padding: '20px', background: '#2563eb', color: 'white', borderRadius: '8px' }}>
+          <h2>🚀 ACCÈS SUPERADMIN DÉTECTÉ</h2>
+          <p>Si vous voyez ce bloc bleu, on peut remettre les tuiles !</p>
+        </div>
+      )}
     </div>
   );
 }
