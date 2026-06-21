@@ -16,7 +16,7 @@ function AppLayout() {
 }
 
 function Guard() {
-  const { loading, session, roles } = useAuth();
+  const { loading, profile, roles } = useAuth();
   const loc = useLocation();
 
   if (loading) {
@@ -27,18 +27,17 @@ function Guard() {
     );
   }
 
-  if (!session) return <Navigate to="/login" />;
+  if (!profile) return <Navigate to="/login" />;
 
-  // Superviseur "pur" : accès limité au tableau de bord (statistiques),
-  // notifications et paramètres. Pas d'accès aux fiches usagers.
+  // Superviseur "pur" : accès limité au tableau de bord, notifications et paramètres.
   const isSuperviseurOnly =
     roles.length > 0 && roles.every((r) => r === "superviseur");
   if (isSuperviseurOnly) {
-    const allowed = ["/", "/notifications", "/parametres"];
+    const allowed = ["/aide", "/aide/notifications", "/aide/parametres"];
     const ok = allowed.some((p) =>
-      p === "/" ? loc.pathname === "/" : loc.pathname.startsWith(p),
+      p === "/aide" ? loc.pathname === "/aide" || loc.pathname === "/aide/" : loc.pathname.startsWith(p),
     );
-    if (!ok) return <Navigate to="/" />;
+    if (!ok) return <Navigate to="/aide" />;
   }
 
   return (
@@ -49,3 +48,4 @@ function Guard() {
     </TerritoireScopeProvider>
   );
 }
+
