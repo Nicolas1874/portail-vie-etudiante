@@ -21,8 +21,8 @@ function Login() {
     setIsLoading(true);
 
     try {
-      // URL de votre API sur Clever Cloud
-      const response = await fetch("https://api-vie-etudiante-uo.cleverapps.io/login", {
+      // --- L'ADRESSE DE VOTRE API ---
+      const response = await fetch("https://portail-vie-etudiante-uo.cleverapps.io/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password } ),
@@ -31,7 +31,7 @@ function Login() {
       const data = await response.json();
 
       if (response.ok && data.user) {
-        // On enregistre les données avec la clé qui a fonctionné
+        // On enregistre les données
         localStorage.setItem("uo_user", JSON.stringify(data.user));
         toast.success("Connexion réussie !");
         
