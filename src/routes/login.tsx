@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { LayoutDashboard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,7 +21,8 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://uo-api-vie-etudiante.cleverapps.io/login", {
+      // URL de votre API sur Clever Cloud
+      const response = await fetch("https://api-vie-etudiante-uo.cleverapps.io/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password } ),
@@ -30,23 +31,19 @@ function Login() {
       const data = await response.json();
 
       if (response.ok && data.user) {
-        // --- SAUVEGARDE FORCÉE ---
-        const userToStore = JSON.stringify(data.user);
-        localStorage.setItem("uo_user", userToStore); // On utilise la clé qui a marché !
+        // On enregistre les données avec la clé qui a fonctionné
+        localStorage.setItem("uo_user", JSON.stringify(data.user));
+        toast.success("Connexion réussie !");
         
-        console.log("Données sauvegardées :", localStorage.getItem("uo_user"));
-        
-        toast.success("Connexion réussie ! Redirection...");
-        
-        // On attend un peu pour être sûr
+        // Redirection vers l'accueil
         setTimeout(() => {
           window.location.href = "/";
-        }, 800);
+        }, 500);
       } else {
-        toast.error(data.message || "Identifiants incorrects");
+        toast.error(data.message || "Erreur de connexion");
       }
     } catch (error) {
-      toast.error("Erreur de connexion à l'API");
+      toast.error("L'API ne répond pas. Vérifiez l'URL dans le code.");
     } finally {
       setIsLoading(false);
     }
@@ -58,20 +55,20 @@ function Login() {
         <CardHeader className="text-center">
           <LayoutDashboard className="w-12 h-12 text-blue-600 mx-auto mb-2" />
           <CardTitle className="text-2xl font-bold">Connexion Portail</CardTitle>
-          <CardDescription>Utilisez vos identifiants institutionnels</CardDescription>
+          <CardDescription>Accès réservé aux agents</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label>Email</Label>
-              <Input type="email" placeholder="nicolas.landry@univ-orleans.fr" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label>Mot de passe</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <Label htmlFor="password">Mot de passe</Label>
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11" type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2 className="animate-spin mr-2" /> : "Se connecter"}
+              {isLoading ? <Loader2 className="animate-spin" /> : "Se connecter"}
             </Button>
           </form>
         </CardContent>
