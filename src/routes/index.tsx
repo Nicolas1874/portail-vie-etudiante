@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { LogOut, LayoutDashboard, ShieldCheck, ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -9,11 +10,38 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [user, setUser] = useState<any>(null);
+  const [apps, setApps] = useState<any[]>([]);
 
   useEffect(() => {
     const saved = localStorage.getItem("uo_user");
     if (saved) {
-      setUser(JSON.parse(saved));
+      try {
+        const userData = JSON.parse(saved);
+        setUser(userData);
+        
+        // On définit les tuiles pour le superadmin
+        if (userData.role && userData.role.toLowerCase() === 'superadmin') {
+          setApps([
+            { 
+              name: "AIDE", 
+              desc: "Gestion des aides financières et dossiers usagers",
+              url: "/aide" // Lien interne vers le module qu'on a intégré
+            },
+            { 
+              name: "PASSERELLE", 
+              desc: "Interface de liaison et coordination",
+              url: "/passerelle" 
+            },
+            { 
+              name: "CVEC", 
+              desc: "Gestion de la Contribution Vie Étudiante et de Campus",
+              url: "/cvec" 
+            }
+          ]);
+        }
+      } catch (e) {
+        console.error("Erreur de lecture session", e);
+      }
     } else {
       window.location.href = "/login";
     }
@@ -27,12 +55,53 @@ function Index() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">Bienvenue sur votre Portail !</h1>
-      <p className="text-lg text-gray-600 mb-8">Votre rôle : {user.role}</p>
-      <Button onClick={handleLogout} className="bg-blue-600 hover:bg-blue-700 text-white">
-        <LogOut className="w-4 h-4 mr-2" /> Déconnexion
-      </Button>
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white border-b border-gray-200 px-8 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <LayoutDashboard className="text-blue-600 w-6 h-6" />
+            <h1 className="text-xl font-bold text-gray-900">Portail Vie Étudiante</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="font-bold text-sm">{user.prenom} {user.nom}</p>
+              <p className="text-[10px] text-red-600 font-bold uppercase flex items-center justify-end gap-1">
+                <ShieldCheck className="w-3 h-3" /> {user.role}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleLogout}>Déconnexion</Button>
+          </div>
+        </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto p-8">
+        <h2 className="text-2xl font-bold mb-8">Vos Applications</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {apps.map(app => (
+            <Card key={app.name} className="border-t-4 border-t-blue-600 hover:shadow-md transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>{app.name}</CardTitle>
+                <ExternalLink className="w-4 h-4 text-gray-400" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-500 text-sm mb-6">{app.desc}</p>
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700" 
+                  onClick={() => {
+                    if (app.url.startsWith('/')) {
+                      window.location.href = app.url;
+                    } else {
+                      window.open(app.url, '_blank');
+                    }
+                  }}
+                >
+                  Ouvrir l'application
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </main>
     </div>
   );
 }
