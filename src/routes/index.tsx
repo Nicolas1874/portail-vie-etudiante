@@ -6,73 +6,46 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [debugInfo, setDebugInfo] = useState<any>({});
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // On récupère TOUT ce qu'il y a dans la mémoire pour comprendre
-    const u = localStorage.getItem("user");
-    const a = localStorage.getItem("applications");
-    
-    setDebugInfo({
-      rawUser: u,
-      rawApps: a,
-      browser: navigator.userAgent
-    });
-
-    if (u && u !== "undefined" && u !== "null") {
-      try {
-        const parsedUser = JSON.parse(u);
-        setUser(parsedUser);
-      } catch (e) {
-        console.error("Erreur de lecture du JSON", e);
-      }
-    }
+    const u = localStorage.getItem("uo_user"); // On utilise une nouvelle clé unique
+    if (u) setUser(JSON.parse(u));
   }, []);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'monospace', backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-      <h1 style={{ color: '#2563eb' }}>🛠️ Debug Portail</h1>
+    <div style={{ padding: '40px', fontFamily: 'sans-serif', textAlign: 'center' }}>
+      <h1>🛠️ Test de Persistance</h1>
       
-      <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ccc' }}>
-        <h3>1. État de la session :</h3>
-        <p>Utilisateur détecté : <strong>{user ? "OUI ✅" : "NON ❌"}</strong></p>
-        {user && (
-          <div style={{ background: '#e0ffe0', padding: '10px' }}>
-            <p>Nom : {user.prenom} {user.nom}</p>
-            <p>Rôle : <strong>{user.role}</strong></p>
-          </div>
-        )}
+      <div style={{ margin: '20px', padding: '20px', border: '2px solid #ccc', borderRadius: '10px' }}>
+        <p>Utilisateur en mémoire : <strong>{user ? `OUI ✅ (${user.prenom})` : "NON ❌"}</strong></p>
       </div>
 
-      <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #ccc' }}>
-        <h3>2. Contenu brut de la mémoire (localStorage) :</h3>
-        <p><strong>Clé "user" :</strong></p>
-        <pre style={{ background: '#eee', padding: '10px', overflow: 'auto' }}>
-          {debugInfo.rawUser || "VIDE (null)"}
-        </pre>
+      <button 
+        onClick={() => {
+          const testUser = { prenom: "Nicolas", nom: "Landry", role: "superadmin" };
+          localStorage.setItem("uo_user", JSON.stringify(testUser));
+          alert("Info enregistrée ! Je vais rafraîchir la page...");
+          window.location.reload();
+        }}
+        style={{ padding: '15px', fontSize: '16px', cursor: 'pointer', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '5px' }}
+      >
+        Étape 1 : Forcer l'enregistrement manuel
+      </button>
+
         
-        <p><strong>Clé "applications" :</strong></p>
-        <pre style={{ background: '#eee', padding: '10px', overflow: 'auto' }}>
-          {debugInfo.rawApps || "VIDE (null)"}
-        </pre>
-      </div>
+  
 
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={() => window.location.href = "/login"} style={{ padding: '10px', marginRight: '10px' }}>
-          Aller au Login
-        </button>
-        <button onClick={() => { localStorage.clear(); window.location.reload(); }} style={{ padding: '10px', color: 'red' }}>
-          Vider la mémoire et rafraîchir
-        </button>
-      </div>
 
-      {user && user.role && user.role.toLowerCase() === 'superadmin' && (
-        <div style={{ marginTop: '30px', padding: '20px', background: '#2563eb', color: 'white', borderRadius: '8px' }}>
-          <h2>🚀 ACCÈS SUPERADMIN DÉTECTÉ</h2>
-          <p>Si vous voyez ce bloc bleu, on peut remettre les tuiles !</p>
-        </div>
-      )}
+      <button 
+        onClick={() => {
+          localStorage.clear();
+          window.location.reload();
+        }}
+        style={{ color: 'red', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+      >
+        Vider tout et recommencer
+      </button>
     </div>
   );
 }
