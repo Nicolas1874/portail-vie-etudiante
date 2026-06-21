@@ -80,9 +80,13 @@ function Index() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-500 text-sm mb-6">{app.desc}</p>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 py-6 text-lg font-semibold" onClick={() => window.open(app.url, '_blank')}>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 py-6 text-lg font-semibold" onClick={() => {
+                  if (app.url.startsWith("/")) window.location.href = app.url;
+                  else window.open(app.url, '_blank');
+                }}>
                   Ouvrir l'application
                 </Button>
+
               </CardContent>
             </Card>
           ))}

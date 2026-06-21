@@ -1,101 +1,61 @@
-## Objectif
+# Intégration de Guichet Connect sous `/aide/*`
 
-Quand un agent connecté au portail clique sur « Ouvrir le SI AIDE », il arrive directement authentifié dans SI AIDE avec **la même adresse e-mail** que celle utilisée sur le portail. Les partenaires qui n'ont d'accès qu'au SI AIDE conservent leur login email/mot de passe classique côté SI AIDE.
+## Ce qui sera copié depuis le projet *Guichet Connect*
 
-## Architecture
+- **40 routes** `_app.*` (usagers, logement, ateliers, dons, calendrier, messagerie, annuaire, exports, notifications, paramètres, presto, partenaire, admin.*) → renommées sous `src/routes/aide/`.
+- **Layout `_app.tsx`** (AppShell + navigation latérale) → devient `src/routes/aide/route.tsx`.
+- **Composants** : `src/components/aide/` (AppShell, PageHeader, StatusBadge, GlobalSearch, DashboardAlertes, CoupsPouceTab, sous-dossiers `coups-pouce/`, `presto/`, `usager/`, etc.).
+- **Libs métier** : `src/lib/aide/` (besoins-correspondance, coups-pouce-print/types, fiche-usager-pdf, labels, motion, presto-*, rapport-annuel*, reorientation-mail, rgpd-export, role-switch, territoire-scope, usager-shortcuts, xlsx-export).
+- **Hook** : `use-browser-notifications` (le `use-mobile` du portail est réutilisé).
+- **Types Supabase** : `src/integrations/aide-supabase/types.ts` (gardés pour le typage uniquement, voir plus bas).
+- **Assets** éventuels du dossier `src/assets/`.
+
+## Routes **non** copiées (à ta demande)
+
+`login.tsx`, `sso.tsx`, `portail.$token.tsx`, `inscription-atelier.$id.tsx`, `__root.tsx`, `router.tsx`, `routeTree.gen.ts`, `styles.css` (les tokens utiles seront fusionnés dans le `styles.css` du portail).
+
+## Convention de chemins
 
 ```text
-[Portail Lovable Cloud]                          [SI AIDE Lovable Cloud]
-  user connecté (Supabase A)                       Supabase B (séparé)
-        │                                                ▲
-        │ 1. clic "Ouvrir"                               │
-        ▼                                                │
-  serverFn issueAideSsoToken()                           │
-   - vérifie session portail                             │
-   - signe JWT HS256 (secret partagé)                    │
-   - { sub, email, name, iat, exp=60s, aud:"si-aide" }   │
-        │                                                │
-        │ 2. open(`${SI_AIDE_URL}/sso?token=...`)        │
-        ▼                                                │
-                              ──────────────────────►  /sso (route SI AIDE)
-                                                         │
-                                          3. serverFn consumeSsoToken(token)
-                                             - vérifie signature + exp + aud
-                                             - upsert profiles (email)
-                                             - magic link admin pour cet email
-                                             - retourne { access_token, refresh_token }
-                                                         │
-                              ◄──────────────────────  4. supabase.auth.setSession(...)
-                                                         │
-                                                         ▼
-                                              utilisateur logué dans SI AIDE
-                                              avec ses rôles locaux
+src/routes/_app.usagers.index.tsx  →  src/routes/aide/usagers.index.tsx
+src/routes/_app.admin.*.tsx        →  src/routes/aide/admin.*.tsx
+src/routes/_app.tsx                →  src/routes/aide/route.tsx   (layout avec <Outlet/>)
 ```
 
-**Sécurité du JWT :**
-- Algo HS256, secret partagé `AIDE_SSO_SECRET` (32+ caractères aléatoires)
-- `exp = iat + 60s` (token à usage quasi-immédiat)
-- `aud = "si-aide"`, `iss = "portail-vie-etudiante"` (vérifiés côté SI AIDE)
-- Stockage côté SI AIDE des `jti` consommés (table `sso_used_tokens`) pour empêcher le rejeu
+Le bouton **AIDE** du portail pointera vers `/aide` (modification de `SI_AIDE_URL` dans `src/lib/apps-config.ts` pour ouvrir en interne, plus le `Link` adapté).
 
-## Travaux côté portail (ce projet — ce que je fais)
+## Authentification — point dur à arbitrer
 
-### 1. Ajouter le secret partagé
-- `secrets--add_secret` pour `AIDE_SSO_SECRET` (l'utilisateur saisira une valeur aléatoire forte ; il devra copier la même dans le projet SI AIDE)
+Tu as demandé deux choses **incompatibles** :
 
-### 2. Nouvelle server function `src/lib/sso.functions.ts`
-- `issueAideSsoToken` (POST, protégée par `requireSupabaseAuth`)
-  - Vérifie que l'utilisateur a `has_app_access('AIDE')` (sinon 403)
-  - Lit son `email` + `full_name` depuis `profiles`
-  - Génère un JWT HS256 avec `jose` (déjà dispo en dépendance Vite ou à ajouter)
-  - Audit log dans `audit_logs` : `action='sso.issue'`, `application='AIDE'`
+1. *« Utiliser l'auth localStorage `uo_user` du portail »* → on injecte cet utilisateur comme contexte d'auth pour Guichet Connect.
+2. *« Garder 100 % des fonctionnalités »* → toutes les pages Guichet Connect lisent/écrivent dans **Supabase** (tables `usagers`, `coups_pouce`, `dons`, `ateliers`, `logement_*`, `presto_*`, `rgpd_*`, `partenaires`, `audit_logs`, …) avec des policies RLS basées sur `auth.uid()`. Sans session Supabase, ces requêtes retourneront `[]` ou échoueront en 401.
 
-### 3. Modifier l'ouverture du SI AIDE
-- Fichier `src/routes/index.tsx` (ou le composant `PortalAppCard`) :
-  - Au clic sur la carte AIDE : appeler `issueAideSsoToken()`, puis `window.open(\`\${SI_AIDE_URL}/sso?token=\${token}\`, '_blank')`
-  - Fallback : si la serverFn échoue, ouvrir `SI_AIDE_URL` brut (l'utilisateur tombe sur l'écran de login classique du SI AIDE)
-  - État de chargement sur la carte pendant la génération du token
+L'API Clever Cloud que tu as mentionnée (`/login`, `/register`) ne réplique pas ces ~30 tables. Trois options réalistes :
 
-### 4. Mettre à jour `apps-config.ts` (rien à changer dans l'URL, juste documenter)
+- **A. Garder le client Supabase de Guichet Connect** (recopier `src/integrations/aide-supabase/`, ses propres `VITE_AIDE_SUPABASE_URL` / `_PUBLISHABLE_KEY`). L'utilisateur du portail signe silencieusement avec Supabase via un mapping email → compte AIDE. C'est la seule façon de garder 100 % des fonctionnalités intactes.
+- **B. Ne migrer vers l'API Clever Cloud QUE l'admin `utilisateurs` + `rôles`** (les seules données pertinentes pour les tuiles du portail). Le reste (usagers, dons, ateliers, etc.) continue sur Supabase Guichet Connect.
+- **C. Tout réécrire pour Clever Cloud** : il faut alors étendre l'API MySQL avec ~30 endpoints REST (CRUD usagers, coups-pouce, dons, ateliers, logement, presto, rgpd, audit, etc.). Délai important, hors scope d'un simple « import ».
 
-## Travaux côté SI AIDE (autre projet — à demander à son agent)
+**Recommandation** : option **B**.
 
-Je fournirai à la fin un prompt clé en main à coller dans le projet SI AIDE. Il contiendra :
+## Étapes d'exécution (option B)
 
-1. **Ajouter le secret** `AIDE_SSO_SECRET` (même valeur que portail) côté Lovable Cloud du SI AIDE
-2. **Migration SQL** : créer `public.sso_used_tokens(jti text primary key, consumed_at timestamptz default now())` pour anti-rejeu
-3. **Server function `consumeSsoToken`** :
-   - Vérifier signature HS256 + `exp` + `aud` + `iss`
-   - Vérifier que `jti` n'est pas dans `sso_used_tokens` (sinon 401)
-   - Insérer le `jti` (lock anti-rejeu)
-   - `supabaseAdmin.auth.admin.getUserByEmail(email)` → si absent : `createUser({ email, email_confirm: true })` puis trigger crée le profil
-   - `supabaseAdmin.auth.admin.generateLink({ type: 'magiclink', email })` puis `verifyOtp` pour obtenir une vraie session, OU plus simple : utiliser `signInWithIdToken` si Supabase le permet, sinon créer un OTP unique et le valider
-   - Retourner `{ access_token, refresh_token }`
-4. **Route publique `/sso`** : page qui lit `?token=`, appelle `consumeSsoToken`, `supabase.auth.setSession(...)`, redirige vers `/`
-5. **Garder le login email/mdp existant** pour les partenaires AIDE-only
+1. Lister exhaustivement les fichiers du projet source via `cross_project--list_project_dir` (récursif sur `components/`, `routes/`, `lib/`).
+2. Copier les fichiers en lot avec `cross_project--copy_project_asset` (texte/binaires) vers leurs nouveaux chemins.
+3. Réécrire tous les imports `@/components/...` → `@/components/aide/...`, `@/lib/...` → `@/lib/aide/...`, `@/integrations/supabase/...` → `@/integrations/aide-supabase/...`, `@/hooks/use-mobile` reste tel quel.
+4. Renommer les fichiers de routes `_app.*` → `aide/*` et adapter chaque `createFileRoute("/_app/...")` → `createFileRoute("/aide/...")`.
+5. Remplacer l'auth Guichet Connect (`@/lib/auth`) par un adaptateur qui lit `localStorage.uo_user` et expose la même API (`useAuth`, `useUserRole`, etc.).
+6. Sur les pages `aide/admin/utilisateurs` et `aide/admin/partenaires`, brancher les mutations sur l'API Clever Cloud (`https://portail-vie-etudiante-uo.cleverapps.io`) — endpoints à préciser.
+7. Ajouter une variable `VITE_AIDE_SUPABASE_URL` + `VITE_AIDE_SUPABASE_PUBLISHABLE_KEY` (tu devras me les fournir, ce sont les clés publiques du backend de Guichet Connect).
+8. Modifier `src/lib/apps-config.ts` : `SI_AIDE_URL = "/aide"` + ajuster la tuile pour utiliser `<Link>` au lieu de `window.open`.
+9. Charger les variables manquantes ; lancer le build pour s'assurer qu'il n'y a pas d'imports cassés.
 
-## Détails techniques
+## Ce dont j'ai besoin de toi avant de coder
 
-- **Bibliothèque JWT** : `jose` (Web Crypto API natif, fonctionne dans le worker TanStack) — `bun add jose` côté portail et SI AIDE
-- **Format URL** : `${SI_AIDE_URL}/sso?token=<jwt>` — token visible mais durée 60s + usage unique
-- **Rotation du secret** : prévue, il suffira de mettre à jour `AIDE_SSO_SECRET` des deux côtés
-- **Domaines accessibles** : pas besoin de configurer CORS car la route `/sso` est rendue côté SI AIDE puis appelle sa propre serverFn
+1. **Confirmer l'option A / B / C** ci-dessus.
+2. Si **B** : la liste exacte des endpoints REST que ton API Clever Cloud expose pour gérer les utilisateurs et leurs droits aux 3 tuiles (`GET /users`, `POST /users`, `PUT /users/:id`, `DELETE /users/:id`, `POST /users/:id/roles`, etc.).
+3. Si **A** ou **B** : l'URL et la clé publishable du Supabase de Guichet Connect (sans elles, aucune page ne peut afficher de données).
+4. Confirmer que le design du portail (header / palette) **disparaît** dans `/aide/*` au profit de l'AppShell propre à Guichet Connect (tu as dit « 100 % du design »).
 
-## Gestion des rôles (validé : 100 % côté SI AIDE)
-
-- À l'upsert de l'utilisateur dans SI AIDE, **aucun rôle n'est attribué automatiquement**
-- L'admin SI AIDE gère ses rôles localement (interface existante)
-- Si l'utilisateur n'a pas de rôle dans SI AIDE, il voit l'écran « accès non autorisé » classique — le SSO ne donne pas de droits par lui-même
-- Conséquence : la première fois qu'un agent du portail clique sur AIDE, il sera loggé mais sans droits tant que l'admin SI AIDE ne lui en a pas attribué
-
-## Ce qui n'est PAS dans ce plan
-
-- Pas de migration des données SI AIDE vers le Supabase du portail
-- Pas de synchro automatique des rôles portail ↔ SI AIDE
-- Pas de logout cross-app (un logout sur le portail ne déconnecte pas SI AIDE)
-
-## Livrables à la fin
-
-1. Code modifié côté portail (3 fichiers + 1 nouvelle dépendance + 1 secret)
-2. Un **prompt prêt à coller** dans le projet SI AIDE décrivant exactement les changements à y faire
-3. Procédure de test : se connecter au portail, cliquer sur AIDE, vérifier qu'on arrive loggé avec le même e-mail
+Une fois ces 4 points tranchés, je copie l'ensemble en un seul lot et je te confirme le résultat.
