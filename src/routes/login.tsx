@@ -29,24 +29,24 @@ function Login() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        // ON FORCE L'ENREGISTREMENT
-        localStorage.clear();
-        localStorage.setItem("user", JSON.stringify(data.user));
-        // On s'assure que applications est au moins un tableau vide
-        localStorage.setItem("applications", JSON.stringify(data.applications || []));
+      if (response.ok && data.user) {
+        // --- SAUVEGARDE FORCÉE ---
+        const userToStore = JSON.stringify(data.user);
+        localStorage.setItem("uo_user", userToStore); // On utilise la clé qui a marché !
         
-        toast.success("Connexion réussie !");
+        console.log("Données sauvegardées :", localStorage.getItem("uo_user"));
         
-        // On attend 500ms pour laisser le temps au navigateur de mémoriser
+        toast.success("Connexion réussie ! Redirection...");
+        
+        // On attend un peu pour être sûr
         setTimeout(() => {
-          window.location.href = "/"; 
-        }, 500);
+          window.location.href = "/";
+        }, 800);
       } else {
-        toast.error(data.message || "Erreur de connexion");
+        toast.error(data.message || "Identifiants incorrects");
       }
     } catch (error) {
-      toast.error("Impossible de contacter l'API");
+      toast.error("Erreur de connexion à l'API");
     } finally {
       setIsLoading(false);
     }
@@ -54,26 +54,24 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-4">
-            <LayoutDashboard className="w-12 h-12 text-blue-600" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Connexion</CardTitle>
-          <CardDescription>Portail Vie Étudiante</CardDescription>
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-blue-600">
+        <CardHeader className="text-center">
+          <LayoutDashboard className="w-12 h-12 text-blue-600 mx-auto mb-2" />
+          <CardTitle className="text-2xl font-bold">Connexion Portail</CardTitle>
+          <CardDescription>Utilisez vos identifiants institutionnels</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email institutionnel</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Label>Email</Label>
+              <Input type="email" placeholder="nicolas.landry@univ-orleans.fr" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <Label>Mot de passe</Label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button className="w-full bg-blue-600" type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Se connecter"}
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11" type="submit" disabled={isLoading}>
+              {isLoading ? <Loader2 className="animate-spin mr-2" /> : "Se connecter"}
             </Button>
           </form>
         </CardContent>
