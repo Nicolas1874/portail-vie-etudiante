@@ -92,14 +92,7 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = useCallback(async (email: string, password: string) => {
-    if (!API_URL) throw new Error("VITE_API_URL n'est pas configuré.");
-    const res = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
+  const handleAuthResponse = async (res: Response, fallbackEmail: string) => {
     let payload: Record<string, unknown> = {};
     const text = await res.text();
     try {
@@ -126,7 +119,7 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
       payload;
 
     const user: ExternalUser = {
-      email: String(userObj.email ?? email),
+      email: String(userObj.email ?? fallbackEmail),
       fullName:
         typeof userObj.fullName === "string"
           ? userObj.fullName
@@ -138,8 +131,27 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
     };
 
     const apps = extractApps(payload);
-
     persist({ user, token, apps });
+  };
+
+  const login = useCallback(async (email: string, password: string) => {
+    if (!API_URL) throw new Error("VITE_API_URL n'est pas configuré.");
+    const res = await fetch(`${API_URL}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    await handleAuthResponse(res, email);
+  }, []);
+
+  const register = useCallback(async (email: string, password: string, fullName: string) => {
+    if (!API_URL) throw new Error("VITE_API_URL n'est pas configuré.");
+    const res = await fetch(`${API_URL}/api/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ email, password, fullName, full_name: fullName, name: fullName }),
+    });
+    await handleAuthResponse(res, email);
   }, []);
 
   const logout = useCallback(() => {
@@ -147,8 +159,8 @@ export function ExternalAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<ExternalAuthContextValue>(
-    () => ({ ...state, loading, login, logout }),
-    [state, loading, login, logout],
+    () => ({ ...state, loading, login, register, logout }),
+    [state, loading, login, register, logout],
   );
 
   return <ExternalAuthContext.Provider value={value}>{children}</ExternalAuthContext.Provider>;
