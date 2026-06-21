@@ -1,9 +1,15 @@
+// Adaptateur d'auth pour le module AIDE.
+// Lit l'utilisateur connecté au portail (localStorage `uo_user`) et expose
+// la même API que l'ancien provider Guichet Connect (useAuth, profile, roles…).
+// La session Supabase reste utilisée par les requêtes data ; si l'utilisateur
+// du portail n'est pas signé dans Supabase AIDE, les requêtes RLS renverront
+// des listes vides (à brancher via /api/login → supabase.auth.signInWithPassword
+// dans une étape suivante).
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/aide-supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 
 export type AppRole = "admin" | "superviseur" | "agent" | "prescripteur" | "partenaire" | "ccas" | "scd_presto";
-
 export type Affectation = "cp" | "presto" | "logement" | null;
 
 export interface UserProfile {
@@ -26,9 +32,7 @@ export interface AuthCtx {
   profile: UserProfile | null;
   roles: AppRole[];
   isAdmin: boolean;
-  /** L'utilisateur a au moins un rôle métier (peut écrire dans les fiches usagers). */
   isMetier: boolean;
-  /** L'utilisateur est admin sans aucun rôle métier endossé (lecture seule sur les fiches). */
   isAdminPur: boolean;
   hasRole: (r: AppRole) => boolean;
   refresh: () => Promise<void>;
@@ -37,71 +41,80 @@ export interface AuthCtx {
 
 const Ctx = createContext<AuthCtx | null>(null);
 
+interface PortalUser {
+  id?: string;
+  email?: string;
+  nom?: string;
+  prenom?: string;
+  role?: string;
+  apps?: string[];
+}
+
+function readPortalUser(): PortalUser | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem("uo_user");
+    return raw ? (JSON.parse(raw) as PortalUser) : null;
+  } catch {
+    return null;
+  }
+}
+
+function rolesFromPortal(u: PortalUser | null): AppRole[] {
+  if (!u?.role) return [];
+  const r = u.role.toLowerCase();
+  if (r === "superadmin" || r === "admin") {
+    return ["admin", "superviseur", "agent"];
+  }
+  return ["agent"];
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [roles, setRoles] = useState<AppRole[]>([]);
-
-  const loadProfileAndRoles = async (uid: string) => {
-    try {
-      const [{ data: p, error: profileError }, { data: r, error: rolesError }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
-        supabase.from("user_roles").select("role").eq("user_id", uid),
-      ]);
-
-      if (profileError || rolesError) {
-        console.error("Erreur de chargement du profil", {
-          profileError,
-          rolesError,
-          uid,
-        });
-      }
-
-      setProfile((p as UserProfile) ?? null);
-      setRoles(((r ?? []) as { role: AppRole }[]).map((x) => x.role));
-    } catch (error) {
-      console.error("Impossible de charger le profil utilisateur", error);
-      setProfile(null);
-      setRoles([]);
-    }
-  };
+  const [portalUser, setPortalUser] = useState<PortalUser | null>(null);
 
   useEffect(() => {
+    setPortalUser(readPortalUser());
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "uo_user") setPortalUser(readPortalUser());
+    };
+    window.addEventListener("storage", onStorage);
+
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
       setSession(s);
       setLoading(false);
-      if (s?.user) {
-        // Defer to avoid deadlock
-        setTimeout(() => {
-          void loadProfileAndRoles(s.user.id);
-        }, 0);
-      } else {
-        setProfile(null);
-        setRoles([]);
-      }
     });
 
     supabase.auth
       .getSession()
-      .then(({ data }) => {
-        setSession(data.session);
-        if (data.session?.user) {
-          void loadProfileAndRoles(data.session.user.id);
-        }
-      })
-      .catch((error) => {
-        console.error("Impossible de récupérer la session", error);
-        setSession(null);
-        setProfile(null);
-        setRoles([]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then(({ data }) => setSession(data.session))
+      .catch(() => setSession(null))
+      .finally(() => setLoading(false));
 
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      sub.subscription.unsubscribe();
+    };
   }, []);
+
+  const roles = rolesFromPortal(portalUser);
+
+  const profile: UserProfile | null = portalUser
+    ? {
+        id: portalUser.id ?? portalUser.email ?? "portal-user",
+        nom: portalUser.nom ?? null,
+        prenom: portalUser.prenom ?? null,
+        email: portalUser.email ?? "",
+        fonction: null,
+        structure_id: null,
+        structure_partenaire_id: null,
+        auth_method: "cas",
+        active: true,
+        affectation: null,
+      }
+    : null;
 
   const value: AuthCtx = {
     loading,
@@ -109,15 +122,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: session?.user ?? null,
     profile,
     roles,
-      isAdmin: roles.includes("admin"),
-      isMetier: roles.some((r) => r !== "admin"),
-      isAdminPur: roles.includes("admin") && !roles.some((r) => r !== "admin"),
-      hasRole: (r) => roles.includes(r),
+    isAdmin: roles.includes("admin"),
+    isMetier: roles.some((r) => r !== "admin"),
+    isAdminPur: roles.includes("admin") && !roles.some((r) => r !== "admin"),
+    hasRole: (r) => roles.includes(r),
     refresh: async () => {
-      if (session?.user) await loadProfileAndRoles(session.user.id);
+      setPortalUser(readPortalUser());
     },
     signOut: async () => {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        /* ignore */
+      }
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("uo_user");
+        window.location.href = "/login";
+      }
     },
   };
 
