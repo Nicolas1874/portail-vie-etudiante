@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 
 /**
  * Demande la permission Notification et déclenche une notif système

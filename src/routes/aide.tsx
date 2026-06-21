@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate, Outlet, useLocation } from "@tanstack/react-router";
-import { AuthProvider, useAuth } from "@/lib/auth";
-import { TerritoireScopeProvider } from "@/lib/territoire-scope";
-import { AppShell } from "@/components/AppShell";
+import { AuthProvider, useAuth } from "@/lib/aide/auth";
+import { TerritoireScopeProvider } from "@/lib/aide/territoire-scope";
+import { AppShell } from "@/components/aide/AppShell";
 
 export const Route = createFileRoute("/aide")({
   component: AppLayout,
