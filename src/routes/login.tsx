@@ -1,130 +1,95 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useExternalAuth } from "@/lib/external-auth";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { LayoutDashboard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
-  component: LoginPage,
+  component: Login,
 });
 
-function LoginPage() {
-  const navigate = useNavigate();
-  const { user, loading } = useAuth();
-  const { user: extUser, login: extLogin, register: extRegister } = useExternalAuth();
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if ((!loading && user) || extUser) navigate({ to: "/" });
-  }, [user, loading, extUser, navigate]);
-
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    try {
-      await extLogin(email, password);
-      navigate({ to: "/" });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Erreur inconnue";
-      toast.error("Connexion impossible", { description: message });
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    setIsLoading(true);
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
     try {
-      await extRegister(email, password, fullName);
-      toast.success("Compte créé", { description: "Vous êtes maintenant connecté." });
-      navigate({ to: "/" });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Erreur inconnue";
-      toast.error("Inscription impossible", { description: message });
+      const response = await fetch("https://uo-api-vie-etudiante.cleverapps.io/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password } ),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // --- ÉTAPE CRUCIALE : ON FORCE L'ENREGISTREMENT ---
+        localStorage.clear(); // On nettoie tout avant
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("applications", JSON.stringify(data.applications || []));
+        
+        toast.success("Connexion réussie !");
+        
+        // On attend 500ms pour être SÛR que le navigateur a écrit sur le disque
+        setTimeout(() => {
+          window.location.href = "/"; 
+        }, 500);
+      } else {
+        toast.error(data.message || "Erreur de connexion");
+      }
+    } catch (error) {
+      toast.error("Impossible de contacter l'API");
     } finally {
-      setSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-background to-secondary">
-      <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="rounded-md bg-primary p-2 text-primary-foreground">
-            <Building2 className="h-6 w-6" />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-4">
+            <LayoutDashboard className="w-12 h-12 text-blue-600" />
           </div>
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight">Portail Vie Étudiante</h1>
-            <p className="text-xs text-muted-foreground">Accès centralisé aux SI</p>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Connexion</CardTitle>
-            <CardDescription>
-              Accédez aux applications du système d'information de la vie étudiante.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="signin">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Se connecter</TabsTrigger>
-                <TabsTrigger value="signup">Créer un compte</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email institutionnel</Label>
-                    <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Mot de passe</Label>
-                    <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={submitting}>
-                    {submitting ? "Connexion…" : "Se connecter"}
-                  </Button>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullname">Nom complet</Label>
-                    <Input id="fullname" required value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email2">Email institutionnel</Label>
-                    <Input id="email2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password2">Mot de passe</Label>
-                    <Input id="password2" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={submitting}>
-                    {submitting ? "Création…" : "Créer le compte"}
-                  </Button>
-                  <p className="text-xs text-muted-foreground">
-                    Vos droits d'accès seront attribués selon vos invitations en attente.
-                  </p>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      </div>
+          <CardTitle className="text-2xl">Connexion</CardTitle>
+          <CardDescription>Accédez au Portail Vie Étudiante</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email institutionnel</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="nom.prenom@univ-orleans.fr" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Mot de passe</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required 
+              />
+            </div>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700" type="submit" disabled={isLoading}>
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Se connecter"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
