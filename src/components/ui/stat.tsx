@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { easeOutQuart } from "@/lib/motion";
+import { easeOutQuart } from "@/lib/aide/motion";
 import type { LucideIcon } from "lucide-react";
 
 interface StatProps {

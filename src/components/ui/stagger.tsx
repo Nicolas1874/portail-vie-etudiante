@@ -1,6 +1,6 @@
 import { motion, type MotionProps } from "motion/react";
 import type { ReactNode } from "react";
-import { staggerParent, staggerChild } from "@/lib/motion";
+import { staggerParent, staggerChild } from "@/lib/aide/motion";
 
 interface StaggerProps extends MotionProps {
   children: ReactNode;
