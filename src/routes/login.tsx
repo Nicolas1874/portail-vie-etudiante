@@ -30,14 +30,15 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // --- ÉTAPE CRUCIALE : ON FORCE L'ENREGISTREMENT ---
-        localStorage.clear(); // On nettoie tout avant
+        // ON FORCE L'ENREGISTREMENT
+        localStorage.clear();
         localStorage.setItem("user", JSON.stringify(data.user));
+        // On s'assure que applications est au moins un tableau vide
         localStorage.setItem("applications", JSON.stringify(data.applications || []));
         
         toast.success("Connexion réussie !");
         
-        // On attend 500ms pour être SÛR que le navigateur a écrit sur le disque
+        // On attend 500ms pour laisser le temps au navigateur de mémoriser
         setTimeout(() => {
           window.location.href = "/"; 
         }, 500);
@@ -58,33 +59,20 @@ function Login() {
           <div className="flex justify-center mb-4">
             <LayoutDashboard className="w-12 h-12 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl">Connexion</CardTitle>
-          <CardDescription>Accédez au Portail Vie Étudiante</CardDescription>
+          <CardTitle className="text-2xl font-bold">Connexion</CardTitle>
+          <CardDescription>Portail Vie Étudiante</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email institutionnel</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="nom.prenom@univ-orleans.fr" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required 
-              />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Mot de passe</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required 
-              />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700" type="submit" disabled={isLoading}>
+            <Button className="w-full bg-blue-600" type="submit" disabled={isLoading}>
               {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Se connecter"}
             </Button>
           </form>
