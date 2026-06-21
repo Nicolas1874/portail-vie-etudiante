@@ -1,540 +1,241 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/aide-supabase/client";
-import { PageHeader } from "@/components/aide/PageHeader";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { 
+  Users, 
+  UserPlus, 
+  Search, 
+  Filter, 
+  MoreVertical, 
+  Shield, 
+  UserCheck, 
+  UserX,
+  Mail,
+  ShieldCheck,
+  ShieldAlert,
+  Loader2
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ROLES, fullName } from "@/lib/aide/labels";
-import type { AppRole } from "@/lib/aide/auth";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { UserPlus, Pencil } from "lucide-react";
-import { ConfirmDelete } from "@/components/aide/ConfirmDelete";
-import { useAuth } from "@/lib/aide/auth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute("/aide/admin/utilisateurs")({
-  component: UsersAdmin,
+  component: UsersManagement,
 });
 
-function UsersAdmin() {
-  const { user } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
-  const [structures, setStructures] = useState<any[]>([]);
-  const [inviteOpen, setInviteOpen] = useState(false);
-  const [editing, setEditing] = useState<any | null>(null);
+// URL de votre API Clever Cloud
+const API_URL = "https://portail-vie-etudiante-uo.cleverapps.io";
 
-  const load = async () => {
-    const [{ data: p }, { data: r }, { data: s }] = await Promise.all([
-      supabase.from("profiles").select("*").order("nom"),
-      supabase.from("user_roles").select("user_id, role"),
-      supabase.from("structures").select("id, nom").order("nom"),
-    ]);
-    const byUser: Record<string, AppRole[]> = {};
-    (r ?? []).forEach((x: any) => {
-      byUser[x.user_id] = [...(byUser[x.user_id] ?? []), x.role];
-    });
-    setUsers((p ?? []).map((u: any) => ({ ...u, roles: byUser[u.id] ?? [] })));
-    setStructures(s ?? []);
+function UsersManagement( ) {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Charger les utilisateurs depuis l'API Clever Cloud
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/users`);
+      if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      toast.error("Impossible de charger les utilisateurs");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
-    load();
+    fetchUsers();
   }, []);
 
-  const removeUser = async (uid: string, label: string) => {
-    const { data, error } = await supabase.functions.invoke("delete-user", {
-      body: { user_id: uid },
-    });
-    if (error || (data as any)?.error) {
-      toast.error((data as any)?.error ?? error?.message ?? "Erreur");
-    } else {
-      toast.success(`${label} supprimé`);
-      load();
+  // Changer le rôle d'un utilisateur
+  const handleUpdateRole = async (userId: number, newRole: string) => {
+    try {
+      const user = users.find(u => u.id === userId);
+      const response = await fetch(`${API_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...user, role: newRole })
+      });
+
+      if (response.ok) {
+        toast.success(`Rôle mis à jour : ${newRole}`);
+        fetchUsers(); // Rafraîchir la liste
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      toast.error("Erreur lors de la mise à jour du rôle");
+    }
+  };
+
+  // Supprimer un utilisateur
+  const handleDeleteUser = async (userId: number) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) return;
+
+    try {
+      const response = await fetch(`${API_URL}/users/${userId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        toast.success("Utilisateur supprimé");
+        fetchUsers();
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      toast.error("Erreur lors de la suppression");
+    }
+  };
+
+  const filteredUsers = users.filter(user => 
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.prenom?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getRoleBadge = (role: string) => {
+    switch (role?.toLowerCase()) {
+      case 'superadmin':
+        return <Badge className="bg-red-100 text-red-700 hover:bg-red-100 border-red-200 flex items-center gap-1"><ShieldAlert className="w-3 h-3" /> Superadmin</Badge>;
+      case 'admin':
+        return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200 flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Admin</Badge>;
+      default:
+        return <Badge variant="secondary" className="flex items-center gap-1"><Shield className="w-3 h-3" /> Agent</Badge>;
     }
   };
 
   return (
-    <div>
-      <PageHeader
-        title="Utilisateurs"
-        description="Gestion des rôles, rattachements et invitations."
-        actions={
-          <Button onClick={() => setInviteOpen(true)}>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Inviter un utilisateur
-          </Button>
-        }
-      />
-      <div className="p-6">
-        <Card className="p-0 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50 data-table">
-              <tr>
-                <th className="text-left px-4 py-3">Utilisateur</th>
-                <th className="text-left px-4 py-3">E-mail</th>
-                <th className="text-left px-4 py-3">Structure</th>
-                <th className="text-left px-4 py-3">Rôles</th>
-                <th className="px-4 py-3 w-16"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {users.map((u) => {
-                const struct = structures.find((s) => s.id === u.structure_id);
-                return (
-                <tr key={u.id}>
-                  <td className="px-4 py-3 font-medium">{fullName(u)}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {struct?.nom ?? <span className="italic">—</span>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {u.roles.length === 0 ? (
-                        <span className="text-xs text-muted-foreground italic">aucun</span>
-                      ) : (
-                        u.roles.map((r: AppRole) => (
-                          <Badge key={r} variant="secondary">
-                            {ROLES[r]}
-                          </Badge>
-                        ))
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button size="sm" variant="outline" onClick={() => setEditing(u)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      {user?.id !== u.id && (
-                        <ConfirmDelete
-                          title={`Supprimer ${fullName(u) || u.email} ?`}
-                          description="Le compte d'authentification, le profil et les rôles seront supprimés. Les données créées par cet utilisateur (usagers, demandes…) seront conservées mais orphelines. Action irréversible."
-                          onConfirm={() => removeUser(u.id, fullName(u) || u.email)}
-                        />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </Card>
-        <p className="text-xs text-muted-foreground mt-3">
-          Astuce : pour vous attribuer le rôle d'administrateur la première fois, ajoutez-le
-          directement dans la base via Cloud → Database → Tables → user_roles.
-        </p>
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Users className="w-6 h-6 text-blue-600" />
+            Gestion des Utilisateurs
+          </h1>
+          <p className="text-gray-500">Gérez les accès et les rôles des agents du portail</p>
+        </div>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+          <UserPlus className="w-4 h-4" />
+          Nouvel Utilisateur
+        </Button>
       </div>
 
-      {inviteOpen && (
-        <InviteDialog
-          structures={structures}
-          onClose={() => setInviteOpen(false)}
-          onInvited={() => {
-            setInviteOpen(false);
-            load();
-          }}
-        />
-      )}
-      {editing && (
-        <EditProfileDialog
-          item={editing}
-          structures={structures}
-          onClose={() => setEditing(null)}
-          onSaved={() => {
-            setEditing(null);
-            load();
-          }}
-        />
-      )}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input 
+                placeholder="Rechercher un utilisateur..." 
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Button variant="outline" className="gap-2">
+              <Filter className="w-4 h-4" /> Filtres
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Utilisateur</TableHead>
+                    <TableHead>Rôle</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center py-8 text-gray-500">
+                        Aucun utilisateur trouvé
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">
+                              {user.prenom?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">{user.prenom} {user.nom}</p>
+                              <p className="text-xs text-gray-500 flex items-center gap-1">
+                                <Mail className="w-3 h-3" /> {user.email}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{getRoleBadge(user.role)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleUpdateRole(user.id, 'superadmin')}>
+                                <ShieldAlert className="w-4 h-4 mr-2 text-red-600" /> Nommer Superadmin
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleUpdateRole(user.id, 'admin')}>
+                                <ShieldCheck className="w-4 h-4 mr-2 text-blue-600" /> Nommer Admin
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleUpdateRole(user.id, 'user')}>
+                                <Shield className="w-4 h-4 mr-2 text-gray-600" /> Rôle Agent standard
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                className="text-red-600 focus:text-red-600"
+                                onClick={() => handleDeleteUser(user.id)}
+                              >
+                                <UserX className="w-4 h-4 mr-2" /> Supprimer l'accès
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
-  );
-}
-
-function EditProfileDialog({
-  item,
-  structures,
-  onClose,
-  onSaved,
-}: {
-  item: any;
-  structures: any[];
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [f, setF] = useState({
-    prenom: item.prenom ?? "",
-    nom: item.nom ?? "",
-    fonction: item.fonction ?? "",
-    email: item.email ?? "",
-    active: item.active ?? true,
-    structure_id: item.structure_id ?? "",
-    structure_partenaire_id: item.structure_partenaire_id ?? "",
-    affectation: (item.affectation as "cp" | "presto" | "logement" | null) ?? "",
-  });
-  const [partStructures, setPartStructures] = useState<any[]>([]);
-  useEffect(() => {
-    supabase
-      .from("partenaire_structures")
-      .select("id, nom")
-      .eq("actif", true)
-      .order("nom")
-      .then(({ data }) => setPartStructures(data ?? []));
-  }, []);
-  const [roles, setRoles] = useState<Record<AppRole, boolean>>(() => {
-    const map = {} as Record<AppRole, boolean>;
-    (Object.keys(ROLES) as AppRole[]).forEach((r) => {
-      map[r] = (item.roles ?? []).includes(r);
-    });
-    return map;
-  });
-  const [saving, setSaving] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    const { error } = await (supabase
-      .from("profiles") as any)
-      .update({
-        prenom: f.prenom || null,
-        nom: f.nom || null,
-        fonction: f.fonction || null,
-        email: f.email,
-        active: f.active,
-        structure_id: f.structure_id || null,
-        structure_partenaire_id: f.structure_partenaire_id || null,
-        affectation: f.affectation || null,
-      })
-      .eq("id", item.id);
-    if (error) {
-      setSaving(false);
-      toast.error(error.message);
-      return;
-    }
-    // Synchronise les rôles
-    const current: AppRole[] = item.roles ?? [];
-    const desired = (Object.keys(roles) as AppRole[]).filter((r) => roles[r]);
-    const toAdd = desired.filter((r) => !current.includes(r));
-    const toRemove = current.filter((r) => !desired.includes(r));
-    if (toAdd.length > 0) {
-      const { error: e1 } = await supabase
-        .from("user_roles")
-        .insert(toAdd.map((role) => ({ user_id: item.id, role })));
-      if (e1) {
-        setSaving(false);
-        toast.error(e1.message);
-        return;
-      }
-    }
-    for (const r of toRemove) {
-      const { error: e2 } = await supabase
-        .from("user_roles")
-        .delete()
-        .eq("user_id", item.id)
-        .eq("role", r);
-      if (e2) {
-        setSaving(false);
-        toast.error(e2.message);
-        return;
-      }
-    }
-    setSaving(false);
-    toast.success("Utilisateur mis à jour");
-    onSaved();
-  };
-
-  return (
-    <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Modifier l'utilisateur</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={submit} className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Prénom</Label>
-              <Input value={f.prenom} onChange={(e) => setF({ ...f, prenom: e.target.value })} />
-            </div>
-            <div>
-              <Label>Nom</Label>
-              <Input value={f.nom} onChange={(e) => setF({ ...f, nom: e.target.value })} />
-            </div>
-          </div>
-          <div>
-            <Label>E-mail</Label>
-            <Input
-              type="email"
-              value={f.email}
-              onChange={(e) => setF({ ...f, email: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label>Fonction</Label>
-            <Input value={f.fonction} onChange={(e) => setF({ ...f, fonction: e.target.value })} />
-          </div>
-          <div>
-            <Label>Structure</Label>
-            <Select
-              value={f.structure_id || "none"}
-              onValueChange={(v) =>
-                setF({ ...f, structure_id: v === "none" ? "" : v })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Aucune</SelectItem>
-                {structures.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.nom}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Structure partenaire (rôle « partenaire »)</Label>
-            <Select
-              value={f.structure_partenaire_id || "none"}
-              onValueChange={(v) =>
-                setF({ ...f, structure_partenaire_id: v === "none" ? "" : v })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Aucune</SelectItem>
-                {partStructures.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.nom}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">
-              Détermine quels coups de pouce ce partenaire peut consulter.
-            </p>
-          </div>
-          <div>
-            <Label>Affectation métier (rôle « agent »)</Label>
-            <Select
-              value={f.affectation || "none"}
-              onValueChange={(v) =>
-                setF({ ...f, affectation: v === "none" ? "" : (v as any) })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Aucune</SelectItem>
-                <SelectItem value="cp">Coups de pouce</SelectItem>
-                <SelectItem value="presto">PRESTO</SelectItem>
-                <SelectItem value="logement">Logement</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">
-              Détermine l'écran métier unique d'un agent (sinon, accès complet).
-            </p>
-          </div>
-          <div>
-            <Label className="mb-2 block">Rôles</Label>
-            <div className="rounded-md border border-border bg-muted/20 p-3 grid grid-cols-2 gap-2">
-              {(Object.keys(ROLES) as AppRole[]).map((r) => (
-                <label
-                  key={r}
-                  className="flex items-center gap-2 text-sm cursor-pointer rounded px-1.5 py-1 hover:bg-muted/40"
-                >
-                  <Checkbox
-                    checked={!!roles[r]}
-                    onCheckedChange={() =>
-                      setRoles((s) => ({ ...s, [r]: !s[r] }))
-                    }
-                  />
-                  <span>{ROLES[r]}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <label className="flex items-center gap-2 text-sm">
-            <Checkbox
-              checked={f.active}
-              onCheckedChange={(v) => setF({ ...f, active: !!v })}
-            />
-            Compte actif
-          </label>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Annuler
-            </Button>
-            <Button type="submit" disabled={saving}>
-              {saving ? "Enregistrement…" : "Enregistrer"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function InviteDialog({
-  structures,
-  onClose,
-  onInvited,
-}: {
-  structures: any[];
-  onClose: () => void;
-  onInvited: () => void;
-}) {
-  const [form, setForm] = useState({
-    email: "",
-    prenom: "",
-    nom: "",
-    fonction: "",
-    structure_id: "",
-  });
-  const [selRoles, setSelRoles] = useState<Record<string, boolean>>({});
-  const [loading, setLoading] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.email) return toast.error("Email requis");
-    setLoading(true);
-    const roles = Object.entries(selRoles)
-      .filter(([, v]) => v)
-      .map(([k]) => k);
-    const { data, error } = await supabase.functions.invoke("invite-user", {
-      body: {
-        email: form.email,
-        prenom: form.prenom,
-        nom: form.nom,
-        fonction: form.fonction,
-        structure_id: form.structure_id || null,
-        roles,
-      },
-    });
-    setLoading(false);
-    if (error || (data as any)?.error) {
-      toast.error((data as any)?.error ?? error?.message ?? "Erreur");
-      return;
-    }
-    toast.success("Invitation envoyée par e-mail");
-    onInvited();
-  };
-
-  return (
-    <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Inviter un utilisateur</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={submit} className="space-y-3">
-          <div>
-            <Label>E-mail *</Label>
-            <Input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Un lien magique d'invitation lui sera envoyé pour activer son compte.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Prénom</Label>
-              <Input
-                value={form.prenom}
-                onChange={(e) => setForm({ ...form, prenom: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>Nom</Label>
-              <Input
-                value={form.nom}
-                onChange={(e) => setForm({ ...form, nom: e.target.value })}
-              />
-            </div>
-          </div>
-          <div>
-            <Label>Fonction</Label>
-            <Input
-              value={form.fonction}
-              onChange={(e) => setForm({ ...form, fonction: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label>Structure</Label>
-            <Select
-              value={form.structure_id || "none"}
-              onValueChange={(v) =>
-                setForm({ ...form, structure_id: v === "none" ? "" : v })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Aucune</SelectItem>
-                {structures.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.nom}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">
-              La structure détermine le territoire d'accès.
-            </p>
-          </div>
-          <div>
-            <Label className="mb-2 block">Rôles</Label>
-            <div className="rounded-md border border-border bg-muted/20 p-3 grid grid-cols-2 gap-2">
-              {(Object.keys(ROLES) as AppRole[]).map((r) => (
-                <label
-                  key={r}
-                  className="flex items-center gap-2 text-sm cursor-pointer rounded px-1.5 py-1 hover:bg-muted/40"
-                >
-                  <Checkbox
-                    checked={!!selRoles[r]}
-                    onCheckedChange={() =>
-                      setSelRoles((s) => ({ ...s, [r]: !s[r] }))
-                    }
-                  />
-                  <span>{ROLES[r]}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Annuler
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Envoi…" : "Envoyer l'invitation"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
   );
 }
