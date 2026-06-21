@@ -16,11 +16,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Eye } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
-import { getRoleSwitchStorageKey } from "@/lib/role-switch";
+import { getRoleSwitchStorageKey } from "@/lib/aide/role-switch";
 
 /**
  * Permet à un admin de se mettre temporairement à la place d'un partenaire

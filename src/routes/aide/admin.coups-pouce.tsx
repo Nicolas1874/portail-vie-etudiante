@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,17 +31,17 @@ import {
 } from "@/components/ui/tabs";
 import { Plus, HandCoins, Pencil } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/auth";
-import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { useAuth } from "@/lib/aide/auth";
+import { ConfirmDelete } from "@/components/aide/ConfirmDelete";
 import {
   TYPES_DISPOSITIF,
   DispositifType,
   ChampPerso,
   DispositifPartenairePermission,
-} from "@/lib/coups-pouce-types";
-import { ChampsBuilder } from "@/components/coups-pouce/ChampsBuilder";
-import { DispositifPartenairesEditor } from "@/components/coups-pouce/DispositifPartenairesEditor";
-import { ImpersonateYtineraireButton } from "@/components/coups-pouce/ImpersonateYtineraireButton";
+} from "@/lib/aide/coups-pouce-types";
+import { ChampsBuilder } from "@/components/aide/coups-pouce/ChampsBuilder";
+import { DispositifPartenairesEditor } from "@/components/aide/coups-pouce/DispositifPartenairesEditor";
+import { ImpersonateYtineraireButton } from "@/components/aide/coups-pouce/ImpersonateYtineraireButton";
 
 export const Route = createFileRoute("/aide/admin/coups-pouce")({
   component: AdminCoupsPouce,

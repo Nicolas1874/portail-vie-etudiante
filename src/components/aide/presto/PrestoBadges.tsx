@@ -4,8 +4,8 @@ import {
   PRESTO_STATUT_TONE,
   PRESTO_URGENCES,
   type PrestoStatut,
-} from "@/lib/presto-labels";
-import { cn } from "@/lib/utils";
+} from "@/lib/aide/presto-labels";
+import { cn } from "@/lib/aide/utils";
 
 export function PrestoStatutBadge({ statut }: { statut: PrestoStatut }) {
   return (

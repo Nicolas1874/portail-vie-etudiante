@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,9 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Copy, Mail } from "lucide-react";
-import { formatDateTime } from "@/lib/labels";
+import { formatDateTime } from "@/lib/aide/labels";
 import { toast } from "sonner";
-import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { ConfirmDelete } from "@/components/aide/ConfirmDelete";
 
 export const Route = createFileRoute("/aide/admin/invitations-partenaires")({
   component: InvitationsPartenaires,

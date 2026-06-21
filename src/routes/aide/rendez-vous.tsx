@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
-import { StatusBadge } from "@/components/StatusBadge";
-import { MODALITES_RDV, STATUTS_RDV, formatDateTime, fullName } from "@/lib/labels";
+import { StatusBadge } from "@/components/aide/StatusBadge";
+import { MODALITES_RDV, STATUTS_RDV, formatDateTime, fullName } from "@/lib/aide/labels";
 
 export const Route = createFileRoute("/aide/rendez-vous")({
   component: RdvList,

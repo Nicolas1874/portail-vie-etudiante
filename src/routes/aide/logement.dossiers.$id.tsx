@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,8 +32,8 @@ import {
   LOGEMENT_STATUTS,
   formatDate,
   fullName,
-} from "@/lib/labels";
-import { StatusBadge } from "@/components/StatusBadge";
+} from "@/lib/aide/labels";
+import { StatusBadge } from "@/components/aide/StatusBadge";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/aide/logement/dossiers/$id")({

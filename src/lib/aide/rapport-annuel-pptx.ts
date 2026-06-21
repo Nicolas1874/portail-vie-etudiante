@@ -1,9 +1,9 @@
 import pptxgen from "pptxgenjs";
-import { supabase } from "@/integrations/supabase/client";
-import { TYPES_PUBLIC } from "@/lib/labels";
-import coverImg from "@/assets/pptx-template/cover.jpg";
-import headerImg from "@/assets/pptx-template/header.jpg";
-import logoImg from "@/assets/pptx-template/logo.png";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { TYPES_PUBLIC } from "@/lib/aide/labels";
+import coverImg from "@/assets/aide-pptx-template/cover.jpg";
+import headerImg from "@/assets/aide-pptx-template/header.jpg";
+import logoImg from "@/assets/aide-pptx-template/logo.png";
 
 interface Options {
   annee: number;

@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, ArrowUp, ArrowDown } from "lucide-react";
-import { ChampPerso, TYPES_CHAMP, ChampType } from "@/lib/coups-pouce-types";
+import { ChampPerso, TYPES_CHAMP, ChampType } from "@/lib/aide/coups-pouce-types";
 
 export function ChampsBuilder({
   value,

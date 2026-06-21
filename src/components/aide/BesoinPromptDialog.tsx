@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import type { Prompt, PromptResponses } from "@/lib/besoins-correspondance";
+import type { Prompt, PromptResponses } from "@/lib/aide/besoins-correspondance";
 
 /**
  * Popup qui pose les questions liées à un besoin source.

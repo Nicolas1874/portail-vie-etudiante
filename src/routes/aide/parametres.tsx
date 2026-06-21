@@ -1,22 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useAuth, type AppRole } from "@/lib/auth";
+import { useAuth, type AppRole } from "@/lib/aide/auth";
 import { toast } from "sonner";
 import { FlaskConical, RotateCcw } from "lucide-react";
-import { ROLES as ROLES_LABELS } from "@/lib/labels";
+import { ROLES as ROLES_LABELS } from "@/lib/aide/labels";
 import {
   clearStoredRoleSwitchState,
   getStoredRoleSwitchState,
   getRoleSwitchStorageKey,
   readStoredRoleSwitchState,
-} from "@/lib/role-switch";
+} from "@/lib/aide/role-switch";
 
 export const Route = createFileRoute("/aide/parametres")({
   component: Settings,

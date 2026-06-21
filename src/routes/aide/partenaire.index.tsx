@@ -1,13 +1,13 @@
 import { createFileRoute, Navigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HandCoins, Clock, CheckCircle2, XCircle, TrendingUp, Download } from "lucide-react";
-import { downloadXlsx } from "@/lib/xlsx-export";
+import { downloadXlsx } from "@/lib/aide/xlsx-export";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/aide/partenaire/")({

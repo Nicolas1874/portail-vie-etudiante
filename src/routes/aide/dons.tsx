@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDate, fullName } from "@/lib/labels";
+import { formatDate, fullName } from "@/lib/aide/labels";
 import { toast } from "sonner";
 import {
   Package,
@@ -35,7 +35,7 @@ import {
   AlertTriangle,
   CalendarClock,
 } from "lucide-react";
-import { DonsListeDeCoursesTab } from "@/components/DonsListeDeCoursesTab";
+import { DonsListeDeCoursesTab } from "@/components/aide/DonsListeDeCoursesTab";
 
 export const Route = createFileRoute("/aide/dons")({
   component: DonsPage,

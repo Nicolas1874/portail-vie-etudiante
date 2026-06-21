@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { useAuth, type AppRole } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth, type AppRole } from "@/lib/aide/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
 import { Button } from "@/components/ui/button";
 import { FlaskConical, RotateCcw } from "lucide-react";
-import { ROLES } from "@/lib/labels";
+import { ROLES } from "@/lib/aide/labels";
 import { toast } from "sonner";
 import {
   clearStoredRoleSwitchState,
   getStoredRoleSwitchState,
   getRoleSwitchStorageKey,
-} from "@/lib/role-switch";
+} from "@/lib/aide/role-switch";
 
 interface OriginalProfile {
   roles: AppRole[];

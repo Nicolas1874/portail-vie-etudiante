@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 // PageHeader retiré : remplacé par UsagerHero (Vague B — Vue 360°)
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,13 +52,13 @@ import {
   formatDate,
   formatDateTime,
   fullName,
-} from "@/lib/labels";
-import { StatusBadge } from "@/components/StatusBadge";
-import { CoupsPouceTab } from "@/components/CoupsPouceTab";
-import { PrestoTab } from "@/components/presto/PrestoTab";
+} from "@/lib/aide/labels";
+import { StatusBadge } from "@/components/aide/StatusBadge";
+import { CoupsPouceTab } from "@/components/aide/CoupsPouceTab";
+import { PrestoTab } from "@/components/aide/presto/PrestoTab";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/aide/auth";
 import { toast } from "sonner";
 import {
   loadCorrespondance,
@@ -67,14 +67,14 @@ import {
   resolveMirrors,
   type Correspondance,
   type PromptResponses,
-} from "@/lib/besoins-correspondance";
-import { BesoinPromptDialog } from "@/components/BesoinPromptDialog";
-import { dispatchUsagerAction, onUsagerAction, type UsagerActionKind } from "@/lib/usager-shortcuts";
-import { UsagerHero } from "@/components/usager/UsagerHero";
-import { UsagerTimeline } from "@/components/usager/UsagerTimeline";
-import { ReorienterDialog } from "@/components/usager/ReorienterDialog";
-import { UsagerSidePanel } from "@/components/usager/UsagerSidePanel";
-import { DemandesNonSatisfaitesSection } from "@/components/DemandesNonSatisfaitesSection";
+} from "@/lib/aide/besoins-correspondance";
+import { BesoinPromptDialog } from "@/components/aide/BesoinPromptDialog";
+import { dispatchUsagerAction, onUsagerAction, type UsagerActionKind } from "@/lib/aide/usager-shortcuts";
+import { UsagerHero } from "@/components/aide/usager/UsagerHero";
+import { UsagerTimeline } from "@/components/aide/usager/UsagerTimeline";
+import { ReorienterDialog } from "@/components/aide/usager/ReorienterDialog";
+import { UsagerSidePanel } from "@/components/aide/usager/UsagerSidePanel";
+import { DemandesNonSatisfaitesSection } from "@/components/aide/DemandesNonSatisfaitesSection";
 
 export const Route = createFileRoute("/aide/usagers/$id")({
   component: UsagerDetail,
@@ -740,7 +740,7 @@ function UsagerDetail() {
                     variant="outline"
                     onClick={async () => {
                       try {
-                        const { exportUsagerDataPDF } = await import("@/lib/rgpd-export");
+                        const { exportUsagerDataPDF } = await import("@/lib/aide/rgpd-export");
                         await exportUsagerDataPDF(id);
                         toast.success("Export PDF généré");
                       } catch (e: any) {

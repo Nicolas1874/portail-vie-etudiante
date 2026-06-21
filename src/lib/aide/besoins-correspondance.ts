@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 
 export type Correspondance = {
   id: string;

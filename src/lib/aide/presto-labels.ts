@@ -1,4 +1,4 @@
-import type { Database } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/aide-supabase/types";
 
 export type PrestoStatut = Database["public"]["Enums"]["presto_statut"];
 export type PrestoTypePret = Database["public"]["Enums"]["presto_type_pret"];

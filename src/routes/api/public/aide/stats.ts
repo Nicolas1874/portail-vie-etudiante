@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/aide-supabase/client.server";
 
 /**
  * Statistiques publiques agrégées et anonymisées.

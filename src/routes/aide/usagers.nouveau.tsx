@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { GENRES, TYPES_PUBLIC, ACCOMPAGNEMENT_PAEJ } from "@/lib/labels";
-import { useAuth } from "@/lib/auth";
-import { useTerritoireScope } from "@/lib/territoire-scope";
+import { GENRES, TYPES_PUBLIC, ACCOMPAGNEMENT_PAEJ } from "@/lib/aide/labels";
+import { useAuth } from "@/lib/aide/auth";
+import { useTerritoireScope } from "@/lib/aide/territoire-scope";
 import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Check, AlertTriangle, UserSearch } from "lucide-react";
 import {
@@ -27,9 +27,9 @@ import {
   resolveMirrors,
   type Correspondance,
   type PromptResponses,
-} from "@/lib/besoins-correspondance";
-import { BesoinPromptDialog } from "@/components/BesoinPromptDialog";
-import { ReorienterDialog } from "@/components/usager/ReorienterDialog";
+} from "@/lib/aide/besoins-correspondance";
+import { BesoinPromptDialog } from "@/components/aide/BesoinPromptDialog";
+import { ReorienterDialog } from "@/components/aide/usager/ReorienterDialog";
 
 export const Route = createFileRoute("/aide/usagers/nouveau")({
   component: NewUsager,

@@ -12,8 +12,8 @@ import { Eye, CheckCircle2, Pencil, Printer, RefreshCw, XCircle } from "lucide-r
 import {
   DispositifPartenairePermission,
   ChampPerso,
-} from "@/lib/coups-pouce-types";
-import { CustomFieldsForm } from "@/components/coups-pouce/CustomFieldsForm";
+} from "@/lib/aide/coups-pouce-types";
+import { CustomFieldsForm } from "@/components/aide/coups-pouce/CustomFieldsForm";
 
 /**
  * Simulation visuelle de ce qu'un partenaire d'une structure verrait et pourrait faire

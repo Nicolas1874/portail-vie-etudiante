@@ -12,11 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 import { toast } from "sonner";
 import { Copy, Mail, Send, AlertCircle } from "lucide-react";
-import { buildReorientMail, buildMailtoUrl, type ReorientService } from "@/lib/reorientation-mail";
+import { buildReorientMail, buildMailtoUrl, type ReorientService } from "@/lib/aide/reorientation-mail";
 
 interface Props {
   open: boolean;

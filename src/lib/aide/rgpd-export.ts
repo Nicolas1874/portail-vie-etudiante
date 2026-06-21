@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 
 export async function exportUsagerDataPDF(usagerId: string) {
   const [{ data: u }, { data: suivis }, { data: demandes }, { data: rdvs }, { data: cps }, { data: consents }, { data: notes }] = await Promise.all([

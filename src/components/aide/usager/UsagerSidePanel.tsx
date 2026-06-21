@@ -8,7 +8,7 @@ import {
   Activity,
   ChevronRight,
 } from "lucide-react";
-import { formatDate, formatDateTime, STATUTS_DEMANDE, TYPOLOGIES } from "@/lib/labels";
+import { formatDate, formatDateTime, STATUTS_DEMANDE, TYPOLOGIES } from "@/lib/aide/labels";
 
 type Props = {
   demandes: any[];

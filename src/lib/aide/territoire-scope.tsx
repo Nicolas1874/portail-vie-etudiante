@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useMemo, type ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 
 export interface TerritoireOption {
   id: string;

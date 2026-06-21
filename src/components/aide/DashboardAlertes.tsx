@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle, Activity, CheckCircle2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";

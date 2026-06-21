@@ -6,8 +6,8 @@
  * catalogue Dons (pour consolidation et future alerte stock).
  */
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, ShoppingBasket, Check, X, Trash2 } from "lucide-react";
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/aide/labels";
 
 type DNS = {
   id: string;

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, MapPin, Phone, Mail, Globe, Building2, Briefcase } from "lucide-react";
-import { useTerritoireScope } from "@/lib/territoire-scope";
+import { useTerritoireScope } from "@/lib/aide/territoire-scope";
 
 export const Route = createFileRoute("/aide/annuaire")({
   component: Annuaire,

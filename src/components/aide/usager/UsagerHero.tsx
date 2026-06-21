@@ -6,10 +6,10 @@ import { motion } from "motion/react";
 import { ArrowLeft, Printer, ShieldAlert, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KeyHint } from "@/components/ui/key-hint";
-import { fullName, TYPES_PUBLIC, SITUATIONS, formatDate } from "@/lib/labels";
-import { ease, duration, staggerParent, staggerChild } from "@/lib/motion";
+import { fullName, TYPES_PUBLIC, SITUATIONS, formatDate } from "@/lib/aide/labels";
+import { ease, duration, staggerParent, staggerChild } from "@/lib/aide/motion";
 import { useNavigate } from "@tanstack/react-router";
-import { genererFicheUsagerPDF } from "@/lib/fiche-usager-pdf";
+import { genererFicheUsagerPDF } from "@/lib/aide/fiche-usager-pdf";
 import { toast } from "sonner";
 import { useState } from "react";
 

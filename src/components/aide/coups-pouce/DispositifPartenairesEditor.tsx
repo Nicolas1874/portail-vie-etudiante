@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChampPerso, DispositifPartenairePermission } from "@/lib/coups-pouce-types";
+import { ChampPerso, DispositifPartenairePermission } from "@/lib/aide/coups-pouce-types";
 import { PartenairePreviewDialog } from "./PartenairePreviewDialog";
 
 const PERMS: { key: keyof DispositifPartenairePermission; label: string }[] = [

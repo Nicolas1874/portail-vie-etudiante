@@ -19,11 +19,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { formatDate, formatDateTime, STATUTS_DEMANDE, STATUTS_RDV } from "@/lib/labels";
+import { formatDate, formatDateTime, STATUTS_DEMANDE, STATUTS_RDV } from "@/lib/aide/labels";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ease, duration, staggerParent, staggerChild } from "@/lib/motion";
-import { dispatchUsagerAction } from "@/lib/usager-shortcuts";
+import { ease, duration, staggerParent, staggerChild } from "@/lib/aide/motion";
+import { dispatchUsagerAction } from "@/lib/aide/usager-shortcuts";
 
 type EventKind = "suivi" | "demande" | "rdv" | "coup-pouce" | "note" | "don" | "logement";
 

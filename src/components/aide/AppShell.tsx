@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate, Outlet } from "@tanstack/react-router";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/aide/auth";
 import { Button } from "@/components/ui/button";
-import { GlobalSearch } from "@/components/GlobalSearch";
+import { GlobalSearch } from "@/components/aide/GlobalSearch";
 import { useBrowserNotifications } from "@/hooks/use-browser-notifications";
 import { motion } from "motion/react";
 import {
@@ -32,10 +32,10 @@ import {
   Laptop,
 } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { fullName } from "@/lib/labels";
-import { RoleSwitchBanner } from "@/components/RoleSwitchBanner";
-import { useTerritoireScope } from "@/lib/territoire-scope";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { fullName } from "@/lib/aide/labels";
+import { RoleSwitchBanner } from "@/components/aide/RoleSwitchBanner";
+import { useTerritoireScope } from "@/lib/aide/territoire-scope";
 import {
   Select,
   SelectContent,
@@ -44,7 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MapPin, ShieldCheck } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/aide/utils";
 
 interface NavItem {
   to: string;

@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { supabase } from "@/integrations/supabase/client";
-import { TYPES_PUBLIC } from "@/lib/labels";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { TYPES_PUBLIC } from "@/lib/aide/labels";
 
 interface Options {
   annee: number;

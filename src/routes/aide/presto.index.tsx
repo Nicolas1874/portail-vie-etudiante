@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,9 +25,9 @@ import {
 } from "@/components/ui/select";
 import { Search, Mail, CalendarCheck, Check, RefreshCw, Download } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { downloadXlsx } from "@/lib/xlsx-export";
+import { downloadXlsx } from "@/lib/aide/xlsx-export";
 import { toast } from "sonner";
-import { fullName, formatDate } from "@/lib/labels";
+import { fullName, formatDate } from "@/lib/aide/labels";
 import {
   PRESTO_STATUTS,
   PRESTO_TYPES,
@@ -35,11 +35,11 @@ import {
   type PrestoStatut,
   type PrestoTypePret,
   type PrestoRenewalMotif,
-} from "@/lib/presto-labels";
+} from "@/lib/aide/presto-labels";
 import {
   PrestoStatutBadge,
   PrestoUrgenceBadge,
-} from "@/components/presto/PrestoBadges";
+} from "@/components/aide/presto/PrestoBadges";
 
 export const Route = createFileRoute("/aide/presto/")({
   component: PrestoIndex,

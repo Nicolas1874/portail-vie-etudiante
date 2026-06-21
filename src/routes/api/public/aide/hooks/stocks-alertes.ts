@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/aide-supabase/client.server";
 
 /**
  * Cron quotidien : alertes stocks de dons.

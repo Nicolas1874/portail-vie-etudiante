@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/aide/labels";
 
 export function renderDocumentTemplate(
   template: string,

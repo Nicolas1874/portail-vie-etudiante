@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,21 +20,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { StatusBadge } from "@/components/StatusBadge";
+import { StatusBadge } from "@/components/aide/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { HandCoins, Plus, Printer, Ticket as TicketIcon } from "lucide-react";
-import { formatDate, formatDateTime } from "@/lib/labels";
+import { formatDate, formatDateTime } from "@/lib/aide/labels";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/aide/auth";
 import {
   TYPES_DISPOSITIF,
   DispositifType,
   ChampPerso,
   STATUTS_TICKET,
-} from "@/lib/coups-pouce-types";
-import { CustomFieldsForm } from "@/components/coups-pouce/CustomFieldsForm";
-import { renderDocumentTemplate, openPrintWindow } from "@/lib/coups-pouce-print";
-import { logSollicitationBesoin } from "@/lib/presto-sollicitation";
+} from "@/lib/aide/coups-pouce-types";
+import { CustomFieldsForm } from "@/components/aide/coups-pouce/CustomFieldsForm";
+import { renderDocumentTemplate, openPrintWindow } from "@/lib/aide/coups-pouce-print";
+import { logSollicitationBesoin } from "@/lib/aide/presto-sollicitation";
 
 const STATUTS: Record<string, string> = {
   en_attente: "En attente",

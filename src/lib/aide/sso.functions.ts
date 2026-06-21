@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { jwtVerify } from "jose";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/aide-supabase/client.server";
 
 export const consumeSsoToken = createServerFn({ method: "POST" })
   .inputValidator((input) =>

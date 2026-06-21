@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft, ExternalLink, Users, Printer } from "lucide-react";
-import { LOGEMENT_PROGRAMMES, LOGEMENT_STATUTS, formatDate, fullName } from "@/lib/labels";
-import { StatusBadge } from "@/components/StatusBadge";
+import { LOGEMENT_PROGRAMMES, LOGEMENT_STATUTS, formatDate, fullName } from "@/lib/aide/labels";
+import { StatusBadge } from "@/components/aide/StatusBadge";
 
 export const Route = createFileRoute("/aide/logement/programmes/$id")({
   component: ProgrammeFiche,

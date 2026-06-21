@@ -1,8 +1,8 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,10 +17,10 @@ import {
 import { Download, AlertTriangle, FileText, TrendingUp, Presentation, Package } from "lucide-react";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TYPES_PUBLIC } from "@/lib/labels";
-import { downloadXlsx } from "@/lib/xlsx-export";
-import { genererRapportAnnuel } from "@/lib/rapport-annuel";
-import { genererRapportBilanPptx, genererRapportComparaisonPptx } from "@/lib/rapport-annuel-pptx";
+import { TYPES_PUBLIC } from "@/lib/aide/labels";
+import { downloadXlsx } from "@/lib/aide/xlsx-export";
+import { genererRapportAnnuel } from "@/lib/aide/rapport-annuel";
+import { genererRapportBilanPptx, genererRapportComparaisonPptx } from "@/lib/aide/rapport-annuel-pptx";
 
 
 export const Route = createFileRoute("/aide/exports")({

@@ -9,9 +9,9 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 import { Users, CalendarDays, FileText, GraduationCap } from "lucide-react";
-import { fullName } from "@/lib/labels";
+import { fullName } from "@/lib/aide/labels";
 
 interface UsagerRow {
   id: string;

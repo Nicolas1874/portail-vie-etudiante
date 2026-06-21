@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,14 +24,14 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Laptop, RefreshCw, Check, X, Calendar } from "lucide-react";
 import { toast } from "sonner";
-import { formatDate, formatDateTime } from "@/lib/labels";
+import { formatDate, formatDateTime } from "@/lib/aide/labels";
 import {
   PRESTO_TYPES,
   PRESTO_MOTIFS,
   type PrestoStatut,
   type PrestoTypePret,
   type PrestoRenewalMotif,
-} from "@/lib/presto-labels";
+} from "@/lib/aide/presto-labels";
 import { PrestoStatutBadge, PrestoUrgenceBadge } from "./PrestoBadges";
 
 interface Request {
@@ -60,8 +60,8 @@ interface Renewal {
   commentaire: string | null;
 }
 
-import { logSollicitationBesoin } from "@/lib/presto-sollicitation";
-import { PRESTO_TYPES as PRESTO_TYPES_FOR_TITLE } from "@/lib/presto-labels";
+import { logSollicitationBesoin } from "@/lib/aide/presto-sollicitation";
+import { PRESTO_TYPES as PRESTO_TYPES_FOR_TITLE } from "@/lib/aide/presto-labels";
 
 export function PrestoTab({ usagerId }: { usagerId: string }) {
   const { user, profile, roles, isAdmin } = useAuth();

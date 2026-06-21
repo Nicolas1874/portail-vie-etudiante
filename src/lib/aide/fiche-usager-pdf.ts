@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/aide-supabase/client";
 import {
   TYPES_PUBLIC,
   SITUATIONS,
@@ -14,7 +14,7 @@ import {
   formatDateTime,
   fullName,
   ageEnAnnees,
-} from "@/lib/labels";
+} from "@/lib/aide/labels";
 
 /**
  * Génère une fiche usager PDF mise en page (couverture + sections).

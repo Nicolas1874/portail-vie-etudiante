@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { formatDateTime } from "@/lib/labels";
+import { formatDateTime } from "@/lib/aide/labels";
 import { Bell, Check, ChevronDown, ChevronRight, Calendar, Package, Megaphone } from "lucide-react";
 
 export const Route = createFileRoute("/aide/notifications")({

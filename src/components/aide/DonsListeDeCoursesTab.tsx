@@ -7,8 +7,8 @@
  * - Export CSV
  */
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import { Download, Check, X, ShoppingBasket, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/aide/labels";
 
 type Row = {
   id: string;

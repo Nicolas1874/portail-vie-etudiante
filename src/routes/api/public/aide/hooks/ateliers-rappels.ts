@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/aide-supabase/client.server";
 
 export const Route = createFileRoute("/api/public/aide/hooks/ateliers-rappels")({
   server: {

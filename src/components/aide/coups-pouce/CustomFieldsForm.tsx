@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChampPerso } from "@/lib/coups-pouce-types";
+import { ChampPerso } from "@/lib/aide/coups-pouce-types";
 
 export function CustomFieldsForm({
   champs,

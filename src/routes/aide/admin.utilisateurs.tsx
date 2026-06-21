@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,12 +22,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ROLES, fullName } from "@/lib/labels";
-import type { AppRole } from "@/lib/auth";
+import { ROLES, fullName } from "@/lib/aide/labels";
+import type { AppRole } from "@/lib/aide/auth";
 import { toast } from "sonner";
 import { UserPlus, Pencil } from "lucide-react";
-import { ConfirmDelete } from "@/components/ConfirmDelete";
-import { useAuth } from "@/lib/auth";
+import { ConfirmDelete } from "@/components/aide/ConfirmDelete";
+import { useAuth } from "@/lib/aide/auth";
 
 export const Route = createFileRoute("/aide/admin/utilisateurs")({
   component: UsersAdmin,

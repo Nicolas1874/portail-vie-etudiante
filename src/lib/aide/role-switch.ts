@@ -1,5 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
-import type { AppRole } from "@/lib/auth";
+import { supabase } from "@/integrations/aide-supabase/client";
+import type { AppRole } from "@/lib/aide/auth";
 
 export interface StoredRoleSwitchState {
   roles: AppRole[];

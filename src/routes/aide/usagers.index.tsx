@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Search, ShieldAlert, AlertTriangle } from "lucide-react";
-import { SITUATIONS, formatDate, fullName, TYPES_PUBLIC } from "@/lib/labels";
+import { SITUATIONS, formatDate, fullName, TYPES_PUBLIC } from "@/lib/aide/labels";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/lib/auth";
-import { useTerritoireScope } from "@/lib/territoire-scope";
+import { useAuth } from "@/lib/aide/auth";
+import { useTerritoireScope } from "@/lib/aide/territoire-scope";
 
 export const Route = createFileRoute("/aide/usagers/")({
   component: ListUsagers,

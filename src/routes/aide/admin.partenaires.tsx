@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/select";
 import { Plus, Pencil, Power, Building2 } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/auth";
-import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { useAuth } from "@/lib/aide/auth";
+import { ConfirmDelete } from "@/components/aide/ConfirmDelete";
 
 export const Route = createFileRoute("/aide/admin/partenaires")({
   component: AdminPartenaires,

@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { PageHeader } from "@/components/PageHeader";
+import { supabase } from "@/integrations/aide-supabase/client";
+import { useAuth } from "@/lib/aide/auth";
+import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -16,15 +16,15 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Home, Search, ExternalLink, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { downloadXlsx } from "@/lib/xlsx-export";
+import { downloadXlsx } from "@/lib/aide/xlsx-export";
 import { toast } from "sonner";
 import {
   formatDate,
   fullName,
   LOGEMENT_PROGRAMMES,
   LOGEMENT_STATUTS,
-} from "@/lib/labels";
-import { StatusBadge } from "@/components/StatusBadge";
+} from "@/lib/aide/labels";
+import { StatusBadge } from "@/components/aide/StatusBadge";
 
 export const Route = createFileRoute("/aide/logement/")({
   component: LogementPage,
