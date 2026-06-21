@@ -1,188 +1,148 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { useAuth } from "@/lib/auth-context";
-import { useExternalAuth } from "@/lib/external-auth";
-import { APP_LIST } from "@/lib/apps-config";
-import { PortalHeader } from "@/components/PortalHeader";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, Settings, Lock, Loader2 } from "lucide-react";
-import { issueAideSsoToken } from "@/lib/sso.functions";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogOut, LayoutDashboard, ExternalLink, ShieldCheck, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  component: Portal,
+  component: Index,
 });
 
-function Portal() {
-  const { user, loading, roles, isAppAdmin } = useAuth();
-  const { user: extUser, apps: extApps, loading: extLoading } = useExternalAuth();
+interface Application {
+  name: string;
+  code: string;
+  url: string;
+}
+
+interface User {
+  email: string;
+  nom: string;
+  prenom?: string;
+  role?: string;
+}
+
+function Index() {
+  const [user, setUser] = useState<User | null>(null);
+  const [applications, setApplications] = useState<Application[]>([]);
   const navigate = useNavigate();
-  const issueSso = useServerFn(issueAideSsoToken);
-  const [ssoLoading, setSsoLoading] = useState<string | null>(null);
-
-  // Source des droits : si l'utilisateur est connecté via l'API externe, on
-  // utilise la liste retournée par /login. Sinon, on retombe sur les rôles
-  // gérés par le backend Supabase (admins, direction, etc.).
-  const accessibleApps = extUser
-    ? extApps
-    : (["AIDE", "HANDICAP", "CVEC"] as const).filter((app) =>
-        roles.some((r) => r.role === "direction" || r.application === app),
-      );
-
-  const openApp = async (appKey: string, url: string) => {
-    if (!url || url === "#") return;
-    if (appKey !== "AIDE") {
-      window.open(url, "_blank", "noopener,noreferrer");
-      return;
-    }
-    setSsoLoading(appKey);
-    try {
-      const { token } = await issueSso();
-      const base = url.replace(/\/+$/, "");
-      window.open(`${base}/sso?token=${encodeURIComponent(token)}`, "_blank", "noopener,noreferrer");
-    } catch (e) {
-      console.error("[sso] échec génération token", e);
-      toast.error("Connexion automatique impossible, ouverture en mode standard.");
-      window.open(url, "_blank", "noopener,noreferrer");
-    } finally {
-      setSsoLoading(null);
-    }
-  };
-
-  const authReady = !loading && !extLoading;
-  const isAuthenticated = !!user || !!extUser;
 
   useEffect(() => {
-    if (authReady && !isAuthenticated) navigate({ to: "/login" });
-  }, [authReady, isAuthenticated, navigate]);
+    const userStr = localStorage.getItem("user");
+    const appsStr = localStorage.getItem("applications");
 
-  // Plus d'auto-redirect : l'utilisateur choisit explicitement le SI à ouvrir
-  // (clic sur "Ouvrir" → nouvel onglet).
+    if (!userStr) {
+      navigate({ to: "/login" });
+      return;
+    }
 
+    const userData = JSON.parse(userStr);
+    setUser(userData);
+    
+    // Logique de gestion des rôles pour l'affichage des tuiles
+    const role = userData.role?.toLowerCase();
+    let defaultApps: Application[] = [];
 
-  if (!authReady || !isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-sm text-muted-foreground">Chargement…</div>
-      </div>
-    );
-  }
+    if (role === 'superadmin') {
+      defaultApps = [
+        { name: "AIDE", code: "AIDE", url: "#" },
+        { name: "HANDICAP", code: "HANDICAP", url: "#" },
+        { name: "CVEC", code: "CVEC", url: "#" }
+      ];
+    } else if (role === 'admin_aide') {
+      defaultApps = [{ name: "AIDE", code: "AIDE", url: "#" }];
+    } else if (role === 'admin_handicap') {
+      defaultApps = [{ name: "HANDICAP", code: "HANDICAP", url: "#" }];
+    } else if (role === 'admin_cvec') {
+      defaultApps = [{ name: "CVEC", code: "CVEC", url: "#" }];
+    }
+
+    // On combine les tuiles par défaut du rôle avec les accès spécifiques de la base de données
+    const dbApps = appsStr ? JSON.parse(appsStr) : [];
+    
+    // Fusion sans doublons (basé sur le code)
+    const combinedApps = [...defaultApps];
+    dbApps.forEach((dbApp: Application) => {
+      if (!combinedApps.find(a => a.code === dbApp.code)) {
+        combinedApps.push(dbApp);
+      }
+    });
+
+    setApplications(combinedApps);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate({ to: "/login" });
+  };
+
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      <PortalHeader />
-      <main className="container mx-auto px-4 py-10 max-w-5xl">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Vos applications</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Sélectionnez une application pour y accéder. Vos droits sont gérés par les administrateurs de chaque SI.
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white border-b px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <LayoutDashboard className="w-6 h-6 text-blue-600" />
+          <h1 className="text-xl font-bold text-gray-900">Portail Vie Étudiante</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right mr-4">
+            <p className="text-sm font-medium text-gray-900">{user.prenom} {user.nom}</p>
+            <p className="text-xs text-gray-500 flex items-center gap-1 justify-end">
+              {user.role === 'superadmin' ? (
+                <ShieldAlert className="w-3 h-3 text-red-600" />
+              ) : (
+                user.role?.startsWith('admin_') && <ShieldCheck className="w-3 h-3 text-green-600" />
+              )}
+              {user.role || 'Agent'}
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleLogout} className="gap-2">
+            <LogOut className="w-4 h-4" />
+            Déconnexion
+          </Button>
+        </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <div className="mb-10">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Bienvenue sur votre espace</h2>
+          <p className="text-gray-600">Sélectionnez l'application que vous souhaitez consulter.</p>
         </div>
 
-        {accessibleApps.length === 0 ? (
-          <Card className="p-8 text-center">
-            <Lock className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <h2 className="font-medium">Aucun accès attribué</h2>
-            <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-              Votre compte est créé mais aucun droit ne vous a été attribué.
-              Contactez l'administrateur de l'application concernée pour obtenir une invitation.
-            </p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {APP_LIST.filter((app) => accessibleApps.includes(app.key)).map((app) => {
-              const accessible = true;
-              const appRoles = roles.filter((r) => r.application === app.key);
-              return (
-                <Card
-                  key={app.key}
-                  className={`relative overflow-hidden p-6 transition-all ${
-                    accessible ? "hover:shadow-md cursor-pointer" : "opacity-50"
-                  }`}
-                >
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1"
-                    style={{ backgroundColor: app.accent }}
-                  />
-                  <div className="flex items-start justify-between mb-3">
-                    <div
-                      className="rounded-md p-2 text-white"
-                      style={{ backgroundColor: app.accent }}
-                    >
-                      <Building2Icon />
-                    </div>
-                    {accessible ? (
-                      <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Lock className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </div>
-                  <h3 className="font-semibold">{app.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 mb-4">{app.description}</p>
-
-                  {accessible && (
-                    <>
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {appRoles.map((r) => (
-                          <Badge key={r.role} variant="secondary" className="text-[10px] uppercase tracking-wide">
-                            {r.role}
-                          </Badge>
-                        ))}
-                        {appRoles.length === 0 && (
-                          <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
-                            Direction
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => openApp(app.key, app.url)}
-                          disabled={!app.url || app.url === "#" || ssoLoading === app.key}
-                          className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium rounded-md border px-3 py-1.5 transition ${
-                            app.url && app.url !== "#"
-                              ? "hover:bg-accent"
-                              : "opacity-50 cursor-not-allowed"
-                          } ${ssoLoading === app.key ? "opacity-70 cursor-wait" : ""}`}
-                        >
-                          {ssoLoading === app.key && <Loader2 className="h-3 w-3 animate-spin" />}
-                          Ouvrir
-                        </button>
-                        {isAppAdmin(app.key) && (
-                          <Link
-                            to="/admin/$app"
-                            params={{ app: app.key }}
-                            className="inline-flex items-center justify-center rounded-md border px-2.5 py-1.5 hover:bg-accent transition"
-                            title="Administration"
-                          >
-                            <Settings className="h-3.5 w-3.5" />
-                          </Link>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </Card>
-              );
-            })}
+        {applications.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {applications.map((app) => (
+              <Card key={app.code} className="hover:shadow-lg transition-shadow border-t-4 border-t-blue-600">
+                <CardHeader>
+                  <CardTitle className="flex justify-between items-center text-lg">
+                    {app.name}
+                    <ExternalLink className="w-4 h-4 text-gray-400" />
+                  </CardTitle>
+                  <CardDescription>Interface de gestion {app.name}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => window.open(app.url, '_blank')}
+                  >
+                    Ouvrir l'application
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        ) : (
+          <Card className="bg-amber-50 border-amber-200">
+            <CardHeader>
+              <CardTitle className="text-amber-800">Aucun accès attribué</CardTitle>
+              <CardDescription className="text-amber-700">
+                Votre compte est créé mais aucun droit ne vous a été attribué. 
+                Contactez l'administrateur pour obtenir des accès.
+              </CardDescription>
+            </CardHeader>
+          </Card>
         )}
       </main>
     </div>
-  );
-}
-
-function Building2Icon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
-      <path d="M6 12H4a2 2 0 0 0-2 2v8h4" />
-      <path d="M18 9h2a2 2 0 0 1 2 2v11h-4" />
-      <path d="M10 6h4" />
-      <path d="M10 10h4" />
-      <path d="M10 14h4" />
-      <path d="M10 18h4" />
-    </svg>
   );
 }
