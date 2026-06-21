@@ -1,141 +1,123 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  CheckCircle,
-  Clock,
-  PlusCircle,
-  Search,
+import { 
+  Users, 
+  FileText, 
+  CheckCircle, 
+  Clock, 
+  PlusCircle, 
+  Search, 
   Download,
-  ArrowLeft,
+  LayoutDashboard,
+  ArrowLeft
 } from "lucide-react";
-import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DashboardAlertes } from "@/components/aide/DashboardAlertes";
+import { StatCard } from "@/components/aide/dashboard/StatCard";
+import { ActionCard } from "@/components/aide/dashboard/ActionCard";
+import { RecentRequests } from "@/components/aide/dashboard/RecentRequests";
+import { Calendar } from "@/components/aide/dashboard/Calendar";
+import { useAuth } from "@/lib/aide/auth";
 
 export const Route = createFileRoute("/aide/")({
   component: Dashboard,
 });
 
-function StatCard({
-  title,
-  value,
-  icon,
-  trend,
-}: {
-  title: string;
-  value: string;
-  icon: ReactNode;
-  trend?: string;
-}) {
-  return (
-    <Card>
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-2 rounded-lg bg-primary/10 text-primary">{icon}</div>
-          {trend && <span className="text-xs font-medium text-muted-foreground">{trend}</span>}
-        </div>
-        <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function ActionCard({
-  title,
-  description,
-  icon,
-  onClick,
-}: {
-  title: string;
-  description: string;
-  icon: ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full text-left rounded-lg border bg-card p-4 hover:bg-accent transition-colors"
-    >
-      <div className="flex items-start gap-3">
-        <div className="p-2 rounded-md bg-primary/10 text-primary">{icon}</div>
-        <div>
-          <div className="font-semibold">{title}</div>
-          <div className="text-xs text-muted-foreground">{description}</div>
-        </div>
-      </div>
-    </button>
-  );
-}
-
 function Dashboard() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+      {/* Barre d'outils supérieure avec bouton retour */}
       <div className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <Button
-            variant="ghost"
-            onClick={() => navigate({ to: "/" })}
-            className="mb-2 -ml-2 text-muted-foreground"
+        <div className="flex items-center gap-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => window.location.href = "/"}
+            className="flex items-center gap-2 text-gray-600 border-gray-300"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Retour au Portail
+            <ArrowLeft className="w-4 h-4" /> Retour au Portail
           </Button>
-          <h1 className="text-3xl font-bold">Guichet de l'Aide</h1>
-          <p className="text-muted-foreground mt-1">
-            Gestion des aides financières et dossiers étudiants
-          </p>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Guichet de l'AIDE</h1>
+            <p className="text-gray-500">Tableau de bord de gestion des aides financières</p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" className="gap-2">
-            <Download className="w-4 h-4" /> Exporter
+            <Download className="w-4 h-4" />
+            Exporter
           </Button>
-          <Button
-            className="gap-2"
-            onClick={() => navigate({ to: "/aide/usagers/nouveau" })}
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
+            onClick={() => navigate({ to: "/aide/admin/utilisateurs" })}
           >
-            <PlusCircle className="w-4 h-4" /> Nouveau dossier
+            <PlusCircle className="w-4 h-4" />
+            Nouveau Dossier
           </Button>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard title="Total dossiers" value="—" icon={<FileText className="w-5 h-5" />} />
-          <StatCard title="En attente" value="—" icon={<Clock className="w-5 h-5" />} />
-          <StatCard title="Validés" value="—" icon={<CheckCircle className="w-5 h-5" />} />
-          <StatCard title="Usagers" value="—" icon={<Users className="w-5 h-5" />} />
+        {/* Statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Total Dossiers"
+            value="2,845"
+            icon={<FileText className="w-5 h-5" />}
+            trend="+12% vs mois dernier"
+            variant="default"
+          />
+          <StatCard
+            title="En Attente"
+            value="148"
+            icon={<Clock className="w-5 h-5" />}
+            trend="-5% vs hier"
+            variant="warning"
+          />
+          <StatCard
+            title="Validés"
+            value="2,150"
+            icon={<CheckCircle className="w-5 h-5" />}
+            trend="98% de succès"
+            variant="success"
+          />
+          <StatCard
+            title="Usagers"
+            value="1,120"
+            icon={<Users className="w-5 h-5" />}
+            trend="+48 nouveaux"
+            variant="info"
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Alertes & dossiers récents</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DashboardAlertes />
-              </CardContent>
-            </Card>
+            <RecentRequests />
           </div>
 
-          <div className="space-y-4">
-            <ActionCard
-              title="Rechercher un usager"
-              description="Annuaire et fiches"
-              icon={<Search className="w-6 h-6" />}
-              onClick={() => navigate({ to: "/aide/usagers" })}
-            />
-            <ActionCard
-              title="Vue Portail"
-              description="Toutes les applications"
-              icon={<LayoutDashboard className="w-6 h-6" />}
-              onClick={() => navigate({ to: "/" })}
-            />
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-4">
+              <ActionCard
+                title="Recherche Avancée"
+                description="Filtrer les dossiers par critères"
+                icon={<Search className="w-6 h-6" />}
+                onClick={() => {}}
+              />
+              <ActionCard
+                title="Gestion Utilisateurs"
+                description="Gérer les accès et les rôles"
+                icon={<Users className="w-6 h-6" />}
+                onClick={() => navigate({ to: "/aide/admin/utilisateurs" })}
+              />
+              <ActionCard
+                title="Tableau de bord"
+                description="Vue d'ensemble des SI"
+                icon={<LayoutDashboard className="w-6 h-6" />}
+                onClick={() => window.location.href = "/"}
+              />
+            </div>
+            <Calendar />
           </div>
         </div>
       </div>
