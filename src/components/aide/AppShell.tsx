@@ -54,67 +54,67 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { to: "/", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/usagers", label: "Usagers", icon: Users },
-  { to: "/rendez-vous", label: "Rendez-vous", icon: CalendarDays },
-  { to: "/calendrier", label: "Calendrier", icon: CalendarDays },
-  { to: "/annuaire", label: "Annuaire partenaires", icon: BookOpen },
-  { to: "/dons", label: "Stock de dons", icon: Package },
-  { to: "/logement", label: "Logement", icon: Home },
-  { to: "/presto", label: "PRESTO — prêts PC", icon: Laptop },
-  { to: "/ateliers", label: "Ateliers", icon: GraduationCap },
-  { to: "/messagerie", label: "Messagerie", icon: MessageSquare },
-  { to: "/notifications", label: "Notifications", icon: Bell },
-  { to: "/demandes-evolution", label: "Demandes d'évolution", icon: Lightbulb },
+  { to: "/aide/", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/aide/usagers", label: "Usagers", icon: Users },
+  { to: "/aide/rendez-vous", label: "Rendez-vous", icon: CalendarDays },
+  { to: "/aide/calendrier", label: "Calendrier", icon: CalendarDays },
+  { to: "/aide/annuaire", label: "Annuaire partenaires", icon: BookOpen },
+  { to: "/aide/dons", label: "Stock de dons", icon: Package },
+  { to: "/aide/logement", label: "Logement", icon: Home },
+  { to: "/aide/presto", label: "PRESTO — prêts PC", icon: Laptop },
+  { to: "/aide/ateliers", label: "Ateliers", icon: GraduationCap },
+  { to: "/aide/messagerie", label: "Messagerie", icon: MessageSquare },
+  { to: "/aide/notifications", label: "Notifications", icon: Bell },
+  { to: "/aide/demandes-evolution", label: "Demandes d'évolution", icon: Lightbulb },
 ];
 
 const ADMIN_NAV: NavItem[] = [
-  { to: "/exports", label: "Exports & audit", icon: Download, adminOnly: true },
-  { to: "/admin/utilisateurs", label: "Utilisateurs", icon: Shield, adminOnly: true },
-  { to: "/admin/partenaires", label: "Partenaires", icon: Handshake, adminOnly: true },
-  { to: "/admin/structures", label: "Structures", icon: Building2, adminOnly: true },
-  { to: "/admin/territoires", label: "Territoires", icon: Map, adminOnly: true },
-  { to: "/admin/logement-programmes", label: "Programmes logement", icon: Home, adminOnly: true },
-  { to: "/admin/coups-pouce", label: "Dispositifs coups de pouce", icon: HandCoins, adminOnly: true },
-  { to: "/admin/invitations-partenaires", label: "Invitations partenaires", icon: Mail, adminOnly: true },
-  { to: "/admin/audit", label: "Journal RGPD", icon: FileSearch, adminOnly: true },
-  { to: "/admin/rgpd", label: "RGPD & purge", icon: ShieldCheck, adminOnly: true },
-  { to: "/admin/seuils", label: "Seuils d'alerte", icon: Bell, adminOnly: true },
-  { to: "/admin/reorientation", label: "Réorientation", icon: MailPlus, adminOnly: true },
-  { to: "/admin/demandes-evolution", label: "Demandes d'évolution", icon: Lightbulb, adminOnly: true },
+  { to: "/aide/exports", label: "Exports & audit", icon: Download, adminOnly: true },
+  { to: "/aide/admin/utilisateurs", label: "Utilisateurs", icon: Shield, adminOnly: true },
+  { to: "/aide/admin/partenaires", label: "Partenaires", icon: Handshake, adminOnly: true },
+  { to: "/aide/admin/structures", label: "Structures", icon: Building2, adminOnly: true },
+  { to: "/aide/admin/territoires", label: "Territoires", icon: Map, adminOnly: true },
+  { to: "/aide/admin/logement-programmes", label: "Programmes logement", icon: Home, adminOnly: true },
+  { to: "/aide/admin/coups-pouce", label: "Dispositifs coups de pouce", icon: HandCoins, adminOnly: true },
+  { to: "/aide/admin/invitations-partenaires", label: "Invitations partenaires", icon: Mail, adminOnly: true },
+  { to: "/aide/admin/audit", label: "Journal RGPD", icon: FileSearch, adminOnly: true },
+  { to: "/aide/admin/rgpd", label: "RGPD & purge", icon: ShieldCheck, adminOnly: true },
+  { to: "/aide/admin/seuils", label: "Seuils d'alerte", icon: Bell, adminOnly: true },
+  { to: "/aide/admin/reorientation", label: "Réorientation", icon: MailPlus, adminOnly: true },
+  { to: "/aide/admin/demandes-evolution", label: "Demandes d'évolution", icon: Lightbulb, adminOnly: true },
 ];
 
 const PARTENAIRE_NAV: NavItem[] = [
-  { to: "/partenaire", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/partenaire/coups-pouce", label: "Coups de pouce", icon: HandCoins },
+  { to: "/aide/partenaire", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/aide/partenaire/coups-pouce", label: "Coups de pouce", icon: HandCoins },
 ];
 
 const SUPERVISEUR_NAV: NavItem[] = [
   { to: "/", label: "Statistiques", icon: LayoutDashboard },
-  { to: "/exports", label: "Exports & audit", icon: Download },
+  { to: "/aide/exports", label: "Exports & audit", icon: Download },
 ];
 
 const SCD_NAV: NavItem[] = [
-  { to: "/presto", label: "Demandes PRESTO", icon: Laptop },
-  { to: "/presto/parametres", label: "Paramètres SCD", icon: Settings },
+  { to: "/aide/presto", label: "Demandes PRESTO", icon: Laptop },
+  { to: "/aide/presto/parametres", label: "Paramètres SCD", icon: Settings },
 ];
 
 const PRESCRIPTEUR_NAV: NavItem[] = [
-  { to: "/", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/usagers", label: "Mes usagers orientés", icon: Users },
+  { to: "/aide/", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/aide/usagers", label: "Mes usagers orientés", icon: Users },
 ];
 
 const AGENT_CP_NAV: NavItem[] = [
-  { to: "/", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/usagers", label: "Usagers", icon: Users },
+  { to: "/aide/", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/aide/usagers", label: "Usagers", icon: Users },
 ];
 
 const AGENT_PRESTO_NAV: NavItem[] = [
-  { to: "/presto", label: "Demandes PRESTO", icon: Laptop },
+  { to: "/aide/presto", label: "Demandes PRESTO", icon: Laptop },
 ];
 
 const AGENT_LOGEMENT_NAV: NavItem[] = [
-  { to: "/logement", label: "Logement", icon: Home },
+  { to: "/aide/logement", label: "Logement", icon: Home },
 ];
 
 const BREADCRUMB_LABELS: Record<string, string> = {
@@ -360,7 +360,7 @@ export function AppShell({ children }: { children?: ReactNode }) {
               variant="ghost"
               size="sm"
               className="flex-1 text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 justify-start h-8 text-xs"
-              onClick={() => navigate({ to: "/parametres" })}
+              onClick={() => navigate({ to: "/aide/parametres" })}
             >
               <Settings className="h-3.5 w-3.5 mr-2" />
               Paramètres
