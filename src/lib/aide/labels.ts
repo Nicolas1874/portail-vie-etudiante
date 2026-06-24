@@ -36,7 +36,7 @@ export const SITUATIONS: Record<string, string> = {
   autre: "Autre",
 };
 
-export const GENRES: Record<string, string> = {
+export const USAGER_SEXES: Record<string, string> = {
   f: "Femme",
   h: "Homme",
   non_binaire: "Non binaire",
@@ -44,10 +44,22 @@ export const GENRES: Record<string, string> = {
   non_precise: "Non précisé",
 };
 
-export const TYPES_PUBLIC: Record<string, string> = {
+export const USAGER_SITUATION_FAMILIALE: Record<string, string> = {
+  celibataire: "Célibataire",
+  en_couple: "En couple",
+  marie: "Marié(e)",
+  pacs: "Pacsé(e)",
+  divorce: "Divorcé(e)",
+  veuf: "Veuf(ve)",
+  autre: "Autre",
+};
+
+
+export const USAGER_TYPE_PUBLIC: Record<string, string> = {
   etudiant: "Étudiant",
   pij: "PIJ — Information jeunesse",
   paej: "PAEJ — Accueil et écoute jeune",
+  autre: "Autre",
 };
 
 export const ACCOMPAGNEMENT_PAEJ: Record<string, string> = {
@@ -135,6 +147,11 @@ export const ROLES: Record<string, string> = {
   partenaire: "Ytinéraire",
   ccas: "Assistantes Sociales",
   scd_presto: "SCD — PRESTO",
+};
+
+export const USAGER_STATUTS: Record<string, string> = {
+  actif: "Actif",
+  archive: "Archivé",
 };
 
 export const LOGEMENT_PROGRAMMES: Record<string, string> = {

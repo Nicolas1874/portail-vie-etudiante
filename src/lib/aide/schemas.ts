@@ -1,0 +1,43 @@
+import { z } from "zod";
+import { USAGER_SEXES, USAGER_SITUATION_FAMILIALE, USAGER_TYPE_PUBLIC } from "./labels";
+
+export const usagerSchema = z.object({
+  prenom: z.string().min(1, "Le prénom est requis"),
+  nom: z.string().min(1, "Le nom est requis"),
+  date_naissance: z.string().optional(),
+  genre: z.enum(Object.keys(USAGER_SEXES) as [string, ...string[]]).optional(),
+  email: z.string().email("Format d'email invalide").optional().or(z.literal("")),
+  telephone: z.string().optional().or(z.literal("")),
+  adresse: z.string().optional().or(z.literal("")),
+  code_postal: z.string().optional().or(z.literal("")),
+  ville: z.string().optional().or(z.literal("")),
+  situation: z.string().optional().or(z.literal("")),
+  etablissement: z.string().optional().or(z.literal("")),
+  numero_etudiant: z.string().optional().or(z.literal("")),
+  type_public: z.enum(Object.keys(USAGER_TYPE_PUBLIC) as [string, ...string[]]).optional(),
+  situation_familiale: z.enum(Object.keys(USAGER_SITUATION_FAMILIALE) as [string, ...string[]]).optional(),
+  nationalite: z.string().optional().or(z.literal("")),
+  date_arrivee_france: z.string().optional(),
+  date_depart_france: z.string().optional(),
+  motif_sejour: z.string().optional().or(z.literal("")),
+  numero_secu: z.string().optional().or(z.literal("")),
+  numero_caf: z.string().optional().or(z.literal("")),
+  rsa: z.boolean().optional(),
+  aah: z.boolean().optional(),
+  complementaire_sante: z.boolean().optional(),
+  mutuelle: z.boolean().optional(),
+  logement_actuel: z.string().optional().or(z.literal("")),
+  logement_type: z.string().optional().or(z.literal("")),
+  logement_bailleur: z.string().optional().or(z.literal("")),
+  logement_loyer: z.number().optional(),
+  logement_apl: z.boolean().optional(),
+  logement_date_entree: z.string().optional(),
+  logement_date_sortie: z.string().optional(),
+  urgence: z.boolean().optional(),
+  urgence_motif: z.string().optional().or(z.literal("")),
+  consentement_actif: z.boolean().optional(),
+  consentement_date: z.string().optional(),
+  consentement_version: z.string().optional().or(z.literal("")),
+});
+
+export type UsagerSchema = z.infer<typeof usagerSchema>;
