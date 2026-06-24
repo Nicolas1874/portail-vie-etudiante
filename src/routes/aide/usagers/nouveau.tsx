@@ -80,7 +80,10 @@ function NouveauUsager() {
       .single();
 
     if (error) {
-      toast.error("Erreur lors de la création de l'usager", { description: error.message });
+      console.error("[USAGER-CREATE] Erreur détaillée:", error);
+      toast.error("Erreur lors de la création de l'usager", { 
+        description: `Code: ${error.code} - ${error.message}. Vérifiez que les tables existent dans votre base de données.` 
+      });
     } else if (data) {
       toast.success("Usager créé avec succès !");
       navigate({ to: "/aide/usagers/$id", params: { id: data.id } });
