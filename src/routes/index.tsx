@@ -19,13 +19,17 @@ function Index() {
         const userData = JSON.parse(saved);
         setUser(userData);
         
-        // On définit les tuiles pour le superadmin
-        if (userData.role && userData.role.toLowerCase() === 'superadmin') {
-          setApps([
+        // On définit les tuiles dynamiquement
+        const userApps = [];
+        const userRole = userData.role?.toLowerCase();
+
+        // 1. Si Superadmin, il voit tout
+        if (userRole === 'superadmin' || userRole === 'admin') {
+          userApps.push(
             { 
               name: "AIDE", 
               desc: "Gestion des aides financières et dossiers usagers",
-              url: "/aide" // Lien interne vers le module qu'on a intégré
+              url: "/aide"
             },
             { 
               name: "PASSERELLE", 
@@ -37,8 +41,20 @@ function Index() {
               desc: "Gestion de la Contribution Vie Étudiante et de Campus",
               url: "/cvec" 
             }
-          ]);
+          );
+        } else {
+          // 2. Sinon, on peut vérifier si l'utilisateur a accès au module AIDE
+          // (On pourrait faire un appel API ici, mais pour l'instant on se base sur les apps déclarées dans uo_user)
+          if (userData.apps?.includes('aide') || userRole === 'agent' || userRole === 'superviseur') {
+            userApps.push({ 
+              name: "AIDE", 
+              desc: "Gestion des aides financières et dossiers usagers",
+              url: "/aide"
+            });
+          }
         }
+        
+        setApps(userApps);
       } catch (e) {
         console.error("Erreur de lecture session", e);
       }
