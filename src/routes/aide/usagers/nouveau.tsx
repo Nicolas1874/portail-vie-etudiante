@@ -3,7 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/aide-supabase/client";
 import { useAuth } from "@/lib/aide/auth";
 import { PageHeader } from "@/components/aide/PageHeader";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -36,12 +36,31 @@ function NouveauUsager() {
       genre: undefined,
       date_naissance: "",
       type_public: undefined,
-      situation_familiale: undefined,
+      situation: undefined,
     },
   });
 
   async function onSubmit(values: UsagerSchema) {
+    if (!profile?.structure_id) {
+      toast.error("Erreur de profil", { description: "Votre compte n'est rattaché à aucune structure. Veuillez configurer votre profil dans les paramètres." });
+      return;
+    }
+
     setLoading(true);
+    
+    // On récupère le territoire_id de la structure
+    const { data: structData } = await supabase
+      .from("structures")
+      .select("territoire_id")
+      .eq("id", profile.structure_id)
+      .single();
+
+    if (!structData?.territoire_id) {
+      toast.error("Erreur de configuration", { description: "Votre structure n'est rattachée à aucun territoire." });
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("usagers")
       .insert({
@@ -49,11 +68,13 @@ function NouveauUsager() {
         prenom: values.prenom,
         email: values.email || null,
         telephone: values.telephone || null,
-        genre: values.genre || null,
+        genre: (values.genre as any) || null,
         date_naissance: values.date_naissance || null,
-        type_public: values.type_public || null,
-        situation_familiale: values.situation_familiale || null,
-        created_by: profile?.id,
+        type_public: (values.type_public as any) || null,
+        situation: (values.situation as any) || null,
+        cree_par: profile?.id,
+        structure_creatrice_id: profile.structure_id,
+        territoire_id: structData.territoire_id,
       })
       .select("id")
       .single();
@@ -201,7 +222,7 @@ function NouveauUsager() {
                   />
                   <FormField
                     control={form.control}
-                    name="situation_familiale"
+                    name="situation"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Situation familiale</FormLabel>
