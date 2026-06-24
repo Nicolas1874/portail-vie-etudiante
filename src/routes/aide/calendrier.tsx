@@ -60,7 +60,7 @@ function CalendrierPage() {
           date: new Date(r.date_debut),
           titre: r.objet,
           sous_titre: r.usager ? `${r.usager.prenom} ${r.usager.nom}` : null,
-          lien: "/rendez-vous",
+          lien: "/aide/rendez-vous",
         });
       });
       (sessions ?? []).forEach((s: any) => {
@@ -71,7 +71,7 @@ function CalendrierPage() {
           date: new Date(s.date_debut),
           titre: s.atelier?.titre ?? "Atelier",
           sous_titre: s.lieu,
-          lien: "/ateliers",
+          lien: "/aide/ateliers",
         });
       });
       collected.sort((a, b) => a.date.getTime() - b.date.getTime());
