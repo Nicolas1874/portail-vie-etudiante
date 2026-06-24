@@ -60,13 +60,28 @@ function readPortalUser(): PortalUser | null {
   }
 }
 
-function rolesFromPortal(u: PortalUser | null): AppRole[] {
-  if (!u?.role) return [];
-  const r = u.role.toLowerCase();
-  if (r === "superadmin" || r === "admin") {
-    return ["admin", "superviseur", "agent"];
+function rolesFromPortal(u: PortalUser | null, profileFromAide?: any): AppRole[] {
+  const roles: AppRole[] = [];
+  
+  // 1. Rôles depuis le Portail (uo_user)
+  if (u?.role) {
+    const r = u.role.toLowerCase();
+    if (r === "superadmin" || r === "admin") {
+      roles.push("admin", "superviseur", "agent");
+    } else {
+      roles.push("agent");
+    }
   }
-  return ["agent"];
+
+  // 2. Rôles depuis le SI AIDE (si l'utilisateur est reconnu par email)
+  if (profileFromAide?.role) {
+    const aideRole = profileFromAide.role.toLowerCase() as AppRole;
+    if (!roles.includes(aideRole)) {
+      roles.push(aideRole);
+    }
+  }
+
+  return roles.length > 0 ? roles : ["agent"];
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -74,13 +89,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [portalUser, setPortalUser] = useState<PortalUser | null>(null);
 
+  const [aideProfile, setAideProfile] = useState<any>(null);
+
   useEffect(() => {
-    setPortalUser(readPortalUser());
+    const u = readPortalUser();
+    setPortalUser(u);
 
     const onStorage = (e: StorageEvent) => {
       if (e.key === "uo_user") setPortalUser(readPortalUser());
     };
     window.addEventListener("storage", onStorage);
+
+    // Si on a un email portal, on cherche le profil dans le SI AIDE
+    if (u?.email) {
+      supabase
+        .from("profiles")
+        .select("*")
+        .eq("email", u.email)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) setAideProfile(data);
+        });
+    }
 
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
       setSession(s);
@@ -99,20 +129,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const roles = rolesFromPortal(portalUser);
+  const roles = rolesFromPortal(portalUser, aideProfile);
 
   const profile: UserProfile | null = portalUser
     ? {
-        id: portalUser.id ?? portalUser.email ?? "portal-user",
-        nom: portalUser.nom ?? null,
-        prenom: portalUser.prenom ?? null,
+        id: aideProfile?.id ?? portalUser.id ?? portalUser.email ?? "portal-user",
+        nom: aideProfile?.nom ?? portalUser.nom ?? null,
+        prenom: aideProfile?.prenom ?? portalUser.prenom ?? null,
         email: portalUser.email ?? "",
-        fonction: null,
-        structure_id: null,
-        structure_partenaire_id: null,
-        auth_method: "cas",
-        active: true,
-        affectation: null,
+        fonction: aideProfile?.fonction ?? null,
+        structure_id: aideProfile?.structure_id ?? null,
+        structure_partenaire_id: aideProfile?.structure_partenaire_id ?? null,
+        auth_method: aideProfile?.auth_method ?? "cas",
+        active: aideProfile?.active ?? true,
+        affectation: aideProfile?.affectation ?? null,
       }
     : null;
 
