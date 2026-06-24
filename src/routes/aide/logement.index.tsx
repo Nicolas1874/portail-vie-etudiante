@@ -141,9 +141,9 @@ function LogementPage() {
               <h3 className="font-semibold text-sm mb-3">Programmes disponibles</h3>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {programmes.map((p) => (
-                  <Link
+                    <Link
                     key={p.id}
-                    to="/logement/programmes/$id"
+                    to="/aide/logement/programmes/$id"
                     params={{ id: p.id }}
                     className="border rounded-md p-3 hover:bg-muted/40 transition-colors"
                   >
@@ -258,7 +258,7 @@ function LogementPage() {
                             className="cursor-pointer hover:bg-muted/40 transition-colors"
                             onClick={() =>
                               navigate({
-                                to: "/logement/dossiers/$id",
+                                to: "/aide/logement/dossiers/$id",
                                 params: { id: d.id },
                               })
                             }
@@ -291,7 +291,7 @@ function LogementPage() {
                                   <Printer className="h-3 w-3 ml-1" />
                                 </a>
                                 <Link
-                                  to="/logement/dossiers/$id"
+                                  to="/aide/logement/dossiers/$id"
                                   params={{ id: d.id }}
                                   onClick={(e) => e.stopPropagation()}
                                   className="inline-flex items-center text-primary hover:underline text-sm"

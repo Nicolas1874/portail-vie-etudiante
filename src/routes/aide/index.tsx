@@ -249,7 +249,7 @@ function Dashboard() {
                   <CardTitle className="text-lg font-semibold">Dernières Activités</CardTitle>
                   <CardDescription>Fiches usagers récemment mises à jour</CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" className="text-primary" onClick={() => navigate({ to: "/aide/usagers/" })}>
+                <Button variant="ghost" size="sm" className="text-primary" onClick={() => navigate({ to: "/aide/usagers" })}>
                   Voir tout <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>

@@ -180,12 +180,12 @@ function DossierFiche() {
         actions={
           <div className="flex gap-2" data-no-print>
             <Button asChild variant="outline" size="sm">
-              <Link to="/logement">
+              <Link to="/aide/logement">
                 <ArrowLeft className="h-4 w-4 mr-1" /> Logement
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <Link to="/usagers/$id" params={{ id: dossier.usager_id }}>
+              <Link to="/aide/usagers/$id" params={{ id: dossier.usager_id }}>
                 Fiche usager <ExternalLink className="h-3 w-3 ml-1" />
               </Link>
             </Button>
@@ -219,11 +219,11 @@ function DossierFiche() {
               {!editing ? (
                 <dl className="grid sm:grid-cols-2 gap-3 text-sm">
                   <Field label="Programme">
-                    <Link
-                      className="underline"
-                      to="/logement/programmes/$id"
-                      params={{ id: dossier.programme_id }}
-                    >
+                      <Link
+                        className="underline"
+                        to="/aide/logement/programmes/$id"
+                        params={{ id: dossier.programme_id }}
+                      >
                       {dossier.logement_programmes?.nom}
                     </Link>
                   </Field>
