@@ -240,7 +240,7 @@ export function DonsListeDeCoursesTab() {
                   <td className="px-4 py-3">
                     {r.usagers ? (
                       <Link
-                        to="/usagers/$id"
+                        to="/aide/usagers/$id"
                         params={{ id: r.usagers.id }}
                         className="inline-flex items-center gap-1 hover:text-primary"
                       >

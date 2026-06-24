@@ -115,7 +115,7 @@ function UsagerDetail() {
                 <CardTitle>Informations générales</CardTitle>
                 <div className="flex gap-2">
                   {canEdit && (
-                    <Button variant="outline" size="sm" onClick={() => navigate({ to: `/aide/usagers/${id}/edit` })}>
+                    <Button variant="outline" size="sm" onClick={() => navigate({ to: `/aide/usagers/${id}/edit` as any })}>
                       <Edit className="mr-2 h-4 w-4" /> Modifier
                     </Button>
                   )}
