@@ -61,7 +61,7 @@ function ProgrammeFiche() {
         actions={
           <div className="flex gap-2" data-no-print>
             <Button asChild variant="outline" size="sm">
-              <Link to="/logement">
+              <Link to="/aide/logement">
                 <ArrowLeft className="h-4 w-4 mr-1" /> Logement
               </Link>
             </Button>
@@ -124,7 +124,7 @@ function ProgrammeFiche() {
                           </td>
                           <td className="px-3 py-2 text-right">
                             <Link
-                              to="/logement/dossiers/$id"
+                              to="/aide/logement/dossiers/$id"
                               params={{ id: d.id }}
                               className="inline-flex items-center text-primary hover:underline text-sm"
                             >
