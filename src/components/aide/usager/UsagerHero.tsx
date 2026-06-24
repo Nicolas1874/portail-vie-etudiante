@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { ArrowLeft, Printer, ShieldAlert, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KeyHint } from "@/components/ui/key-hint";
-import { fullName, TYPES_PUBLIC, SITUATIONS, formatDate } from "@/lib/aide/labels";
+import { fullName, USAGER_TYPE_PUBLIC, SITUATIONS, formatDate } from "@/lib/aide/labels";
 import { ease, duration, staggerParent, staggerChild } from "@/lib/aide/motion";
 import { useNavigate } from "@tanstack/react-router";
 import { genererFicheUsagerPDF } from "@/lib/aide/fiche-usager-pdf";
@@ -64,7 +64,7 @@ export function UsagerHero({
   const joursDepuis = daysSince(dernSuivi);
   const demandesOuvertes = demandes.filter((d) => d.statut !== "cloturee" && d.statut !== "annulee").length;
   const rdvFutur = rdvs.find((r) => new Date(r.date_debut).getTime() > Date.now());
-  const subtitle = [TYPES_PUBLIC[usager.type_public] ?? SITUATIONS[usager.situation], usager.composante]
+  const subtitle = [USAGER_TYPE_PUBLIC[usager.type_public] ?? SITUATIONS[usager.situation], usager.composante]
     .filter(Boolean)
     .join(" · ");
 

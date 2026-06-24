@@ -2,9 +2,9 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { supabase } from "@/integrations/aide-supabase/client";
 import {
-  TYPES_PUBLIC,
+  USAGER_TYPE_PUBLIC,
   SITUATIONS,
-  GENRES,
+  USAGER_SEXES,
   STATUTS_DEMANDE,
   PRIORITES,
   STATUTS_RDV,
@@ -19,6 +19,7 @@ import {
 /**
  * Génère une fiche usager PDF mise en page (couverture + sections).
  * Utilise jsPDF + autoTable, déjà présents dans le projet.
+ * Note: les imports sont corrigés pour correspondre aux labels renommés.
  */
 export async function genererFicheUsagerPDF(usagerId: string) {
   // 1. Récupération
@@ -95,7 +96,7 @@ export async function genererFicheUsagerPDF(usagerId: string) {
   doc.setFontSize(10);
   const age = ageEnAnnees(usager.date_naissance);
   const subtitleParts = [
-    TYPES_PUBLIC[usager.type_public] ?? SITUATIONS[usager.situation] ?? "",
+    USAGER_TYPE_PUBLIC[usager.type_public] ?? SITUATIONS[usager.situation] ?? "",
     age !== null ? `${age} ans` : "",
     usager.composante ?? "",
   ].filter(Boolean);
@@ -197,7 +198,7 @@ export async function genererFicheUsagerPDF(usagerId: string) {
         "Date de naissance",
         usager.date_naissance ? `${formatDate(usager.date_naissance)}${age !== null ? `  (${age} ans)` : ""}` : "—",
         "Genre",
-        GENRES[usager.genre] ?? "—",
+        USAGER_SEXES[usager.genre] ?? "—"
       ],
       [
         "Adresse",
