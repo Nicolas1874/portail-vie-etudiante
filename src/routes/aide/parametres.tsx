@@ -36,8 +36,16 @@ function Settings() {
       supabase.from("structures").select("id, nom, territoire_id").order("nom"),
       supabase.from("territoires").select("id, nom").order("nom"),
     ]).then(([s, t]) => {
-      setStructures((s.data ?? []) as any);
-      setTerritoires(t.data ?? []);
+      const sData = (s.data ?? []) as any;
+      const tData = (t.data ?? []) as any;
+      setStructures(sData);
+      setTerritoires(tData);
+
+      if (tData.length === 0) {
+        toast.info("Aucun territoire configuré", { description: "Commencez par créer un territoire dans l'administration." });
+      } else if (sData.length === 0) {
+        toast.info("Aucune structure configurée", { description: "Créez une structure rattachée à votre territoire." });
+      }
     });
   }, []);
 
