@@ -227,7 +227,7 @@ function MessageriePage() {
                     </div>
                     {activeConv.usager ? (
                       <Link
-                        to="/usagers/$id"
+                        to="/aide/usagers/$id"
                         params={{ id: activeConv.usager.id }}
                         className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
                       >
