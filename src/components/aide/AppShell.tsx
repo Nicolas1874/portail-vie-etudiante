@@ -90,7 +90,7 @@ const PARTENAIRE_NAV: NavItem[] = [
 ];
 
 const SUPERVISEUR_NAV: NavItem[] = [
-  { to: "/", label: "Statistiques", icon: LayoutDashboard },
+  { to: "/aide/", label: "Statistiques", icon: LayoutDashboard },
   { to: "/aide/exports", label: "Exports & audit", icon: Download },
 ];
 
