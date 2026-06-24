@@ -17,7 +17,7 @@ import {
 import { Download, AlertTriangle, FileText, TrendingUp, Presentation, Package } from "lucide-react";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TYPES_PUBLIC } from "@/lib/aide/labels";
+import { USAGER_TYPE_PUBLIC } from "@/lib/aide/labels";
 import { downloadXlsx } from "@/lib/aide/xlsx-export";
 import { genererRapportAnnuel } from "@/lib/aide/rapport-annuel";
 import { genererRapportBilanPptx, genererRapportComparaisonPptx } from "@/lib/aide/rapport-annuel-pptx";
@@ -137,7 +137,7 @@ function ExportsPage() {
         return {
           nom: u.nom,
           prenom: u.prenom,
-          public: TYPES_PUBLIC[u.type_public] ?? u.type_public ?? "",
+          public: USAGER_TYPE_PUBLIC[u.type_public] ?? u.type_public ?? "",
           territoire: territoireNom(u.territoire_id),
           etablissement: u.etablissement,
           numero_etudiant: u.numero_etudiant,
@@ -182,7 +182,7 @@ function ExportsPage() {
         .map((r: any) => ({
           date: fmtDate(r.date_visite),
           usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-          public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+          public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
           territoire: territoireNom(r.usagers?.territoire_id),
           besoins: (r.suivis_besoins ?? [])
             .map((sb: any) => sb.besoins?.libelle)
@@ -226,7 +226,7 @@ function ExportsPage() {
           cree_le: fmtDate(r.created_at),
           cloture_le: fmtDate(r.date_cloture),
           usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-          public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+          public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
           territoire: territoireNom(r.usagers?.territoire_id),
           besoins: (r.demandes_besoins ?? [])
             .map((db: any) => db.besoins?.libelle)
@@ -339,7 +339,7 @@ function ExportsPage() {
               }))
               .sort(sortByTotalDesc)
           : [];
-        sheets[TYPES_PUBLIC[pub]?.slice(0, 31) ?? pub] = rows;
+        sheets[USAGER_TYPE_PUBLIC[pub]?.slice(0, 31) ?? pub] = rows;
       });
 
       // Feuille par territoire (matrice besoin × territoire)
@@ -397,7 +397,7 @@ function ExportsPage() {
           dispositif: r.coups_pouce_dispositifs?.libelle,
           type: r.coups_pouce_dispositifs?.type,
           usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-          public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+          public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
           territoire: territoireNom(r.usagers?.territoire_id),
         }));
       downloadXlsx(`coups_pouce_${from}_${to}`, rows);
@@ -582,7 +582,7 @@ function ExportsPage() {
           date_retour_prevue: fmtDate(r.date_retour_prevue),
           date_retour_effectif: fmtDate(r.date_retour_effectif),
           usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-          public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+          public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
           territoire: territoireNom(r.usagers?.territoire_id),
         }));
       downloadXlsx(`presto_${from}_${to}`, rows);
@@ -619,7 +619,7 @@ function ExportsPage() {
           date_fin: fmtDate(r.date_fin),
           bail_signe_le: fmtDate(r.bail_signe_le),
           usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-          public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+          public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
           territoire: territoireNom(r.usagers?.territoire_id),
         }));
       downloadXlsx(`logement_${from}_${to}`, rows);
@@ -658,7 +658,7 @@ function ExportsPage() {
       const { data } = await q;
       return (data ?? []).map((u: any) => ({
         _grp: u.created_at, nom: u.nom, prenom: u.prenom,
-        public: TYPES_PUBLIC[u.type_public] ?? u.type_public, etablissement: u.etablissement, code_postal: u.code_postal,
+        public: USAGER_TYPE_PUBLIC[u.type_public] ?? u.type_public, etablissement: u.etablissement, code_postal: u.code_postal,
         urgence: u.urgence, territoire: territoireNom(u.territoire_id), cree_le: fmtDate(u.created_at),
       }));
     }},
@@ -668,7 +668,7 @@ function ExportsPage() {
         _grp: r.created_at, titre: r.titre, typologie: r.typologie, statut: r.statut, priorite: r.priorite,
         cree_le: fmtDate(r.created_at), cloture_le: fmtDate(r.date_cloture),
         usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-        public: TYPES_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
+        public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
         besoins: (r.demandes_besoins ?? []).map((db: any) => db.besoins?.libelle).filter(Boolean).join(" | "),
       }));
     }},
@@ -682,13 +682,13 @@ function ExportsPage() {
         const u = r.demandes?.usagers;
         if (territoireId !== "all" && u?.territoire_id !== territoireId) return;
         if (publicFilter !== "all" && u?.type_public !== publicFilter) return;
-        rows.push({ _grp: r.demandes?.created_at, source: "demande", date: fmtDate(r.demandes?.created_at), code: r.besoins?.code, besoin: r.besoins?.libelle, public: TYPES_PUBLIC[u?.type_public] ?? "", territoire: territoireNom(u?.territoire_id) });
+        rows.push({ _grp: r.demandes?.created_at, source: "demande", date: fmtDate(r.demandes?.created_at), code: r.besoins?.code, besoin: r.besoins?.libelle, public: USAGER_TYPE_PUBLIC[u?.type_public] ?? "", territoire: territoireNom(u?.territoire_id) });
       });
       (sb ?? []).forEach((r: any) => {
         const u = r.suivis?.usagers;
         if (territoireId !== "all" && u?.territoire_id !== territoireId) return;
         if (publicFilter !== "all" && u?.type_public !== publicFilter) return;
-        rows.push({ _grp: r.suivis?.date_visite, source: "venue", date: fmtDate(r.suivis?.date_visite), code: r.besoins?.code, besoin: r.besoins?.libelle, public: TYPES_PUBLIC[u?.type_public] ?? "", territoire: territoireNom(u?.territoire_id) });
+        rows.push({ _grp: r.suivis?.date_visite, source: "venue", date: fmtDate(r.suivis?.date_visite), code: r.besoins?.code, besoin: r.besoins?.libelle, public: USAGER_TYPE_PUBLIC[u?.type_public] ?? "", territoire: territoireNom(u?.territoire_id) });
       });
       return rows;
     }},
@@ -697,7 +697,7 @@ function ExportsPage() {
       return (data ?? []).filter((r: any) => (territoireId === "all" || r.usagers?.territoire_id === territoireId) && (publicFilter === "all" || r.usagers?.type_public === publicFilter)).map((r: any) => ({
         _grp: r.date_visite, date: fmtDate(r.date_visite),
         usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-        public: TYPES_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
+        public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
         besoins: (r.suivis_besoins ?? []).map((sb: any) => sb.besoins?.libelle).filter(Boolean).join(" | "),
       }));
     }},
@@ -708,7 +708,7 @@ function ExportsPage() {
         statut: r.statut, montant: r.montant,
         dispositif: r.coups_pouce_dispositifs?.libelle, type: r.coups_pouce_dispositifs?.type,
         usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-        public: TYPES_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
+        public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
       }));
     }},
     presto: { dateKey: "_grp", load: async () => {
@@ -719,7 +719,7 @@ function ExportsPage() {
         _grp: r.date_demande, date_demande: fmtDate(r.date_demande), statut: r.statut, type_pret: r.type_pret, urgence: r.urgence,
         date_recup: fmtDate(r.date_recup), date_retour_prevue: fmtDate(r.date_retour_prevue),
         usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-        public: TYPES_PUBLIC[r.usagers?.type_public] ?? "",
+        public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "",
         territoire: territoireNom(r.usagers?.territoire_id),
       }));
     }},
@@ -732,7 +732,7 @@ function ExportsPage() {
         hebergement_type: r.hebergement_type, hebergement_cout: r.hebergement_cout,
         date_debut: fmtDate(r.date_debut), date_fin_prevue: fmtDate(r.date_fin_prevue),
         usager: `${r.usagers?.prenom ?? ""} ${r.usagers?.nom ?? ""}`.trim(),
-        public: TYPES_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
+        public: USAGER_TYPE_PUBLIC[r.usagers?.type_public] ?? "", territoire: territoireNom(r.usagers?.territoire_id),
       }));
     }},
     ateliers: { dateKey: "_grp", load: async () => {

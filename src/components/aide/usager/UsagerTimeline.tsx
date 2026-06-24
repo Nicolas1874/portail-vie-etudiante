@@ -19,7 +19,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { formatDate, formatDateTime, STATUTS_DEMANDE, STATUTS_RDV } from "@/lib/aide/labels";
+import { formatDate, formatDateTime, STATUTS_DEMANDE, STATUTS_RDV, TYPOLOGIES } from "@/lib/aide/labels";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ease, duration, staggerParent, staggerChild } from "@/lib/aide/motion";

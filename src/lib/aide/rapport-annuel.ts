@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { supabase } from "@/integrations/aide-supabase/client";
-import { TYPES_PUBLIC } from "@/lib/aide/labels";
+import { USAGER_TYPE_PUBLIC } from "@/lib/aide/labels";
 
 interface Options {
   annee: number;
@@ -148,7 +148,7 @@ export async function genererRapportAnnuel({ annee, territoireId, territoireNom 
     startY: y + 5,
     head: [["Public", "Nb usagers", "Part"]],
     body: Object.entries(repartPublic).map(([k, v]) => [
-      TYPES_PUBLIC[k] ?? k,
+      USAGER_TYPE_PUBLIC[k] ?? k,
       String(v),
       countN ? `${Math.round((v / countN) * 100)} %` : "0 %",
     ]),
@@ -178,7 +178,7 @@ export async function genererRapportAnnuel({ annee, territoireId, territoireNom 
     const yp = ((doc as any).lastAutoTable.finalY ?? 0) + 12;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
-    doc.text(`Top besoins — ${TYPES_PUBLIC[pub] ?? pub}`, 14, yp);
+    doc.text(`Top besoins — ${USAGER_TYPE_PUBLIC[pub] ?? pub}`, 14, yp);
     autoTable(doc, {
       startY: yp + 4,
       head: [["Besoin", "Occurrences"]],

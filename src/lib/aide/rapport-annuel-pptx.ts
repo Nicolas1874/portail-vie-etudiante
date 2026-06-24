@@ -1,6 +1,6 @@
 import pptxgen from "pptxgenjs";
 import { supabase } from "@/integrations/aide-supabase/client";
-import { TYPES_PUBLIC } from "@/lib/aide/labels";
+import { USAGER_TYPE_PUBLIC } from "@/lib/aide/labels";
 import coverImg from "@/assets/aide-pptx-template/cover.jpg";
 import headerImg from "@/assets/aide-pptx-template/header.jpg";
 import logoImg from "@/assets/aide-pptx-template/logo.png";
@@ -187,7 +187,7 @@ export async function genererRapportBilanPptx({ annee, territoireId, territoireN
   const repart: Record<string, number> = { etudiant: 0, pij: 0, paej: 0, autre: 0 };
   N.rawUsagers.forEach((u: any) => { const k = (u.type_public ?? "autre") as string; repart[k in repart ? k : "autre"]++; });
   s4.addChart(pptx.ChartType.doughnut, [{
-    name: "Public", labels: Object.keys(repart).map((k) => TYPES_PUBLIC[k] ?? k), values: Object.values(repart),
+    name: "Public", labels: Object.keys(repart).map((k) => USAGER_TYPE_PUBLIC[k] ?? k), values: Object.values(repart),
   }], {
     x: 0.5, y: 1.5, w: 12.3, h: 4.3,
     showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 12,
@@ -196,7 +196,7 @@ export async function genererRapportBilanPptx({ annee, territoireId, territoireN
   });
   const dominant = Object.entries(repart).sort((a,b) => b[1]-a[1])[0];
   addNarrative(s4, [
-    `Public majoritaire : ${TYPES_PUBLIC[dominant[0]] ?? dominant[0]} (${dominant[1]} usagers, ${totU ? Math.round((dominant[1]/totU)*100) : 0}%).`,
+    `Public majoritaire : ${USAGER_TYPE_PUBLIC[dominant[0]] ?? dominant[0]} (${dominant[1]} usagers, ${totU ? Math.round((dominant[1]/totU)*100) : 0}%).`,
     `${repart.etudiant} étudiants, ${repart.pij} PIJ, ${repart.paej} PAEJ.`,
   ]);
 
@@ -390,7 +390,7 @@ export async function genererRapportComparaisonPptx({ annee, territoireId, terri
     ...Object.keys(rN).map<pptxgen.TableRow>((k) => {
       const e = evolPct(rN[k], rP[k]);
       return [
-        { text: TYPES_PUBLIC[k] ?? k, options: { fontFace: FONT } },
+        { text: USAGER_TYPE_PUBLIC[k] ?? k, options: { fontFace: FONT } },
         { text: String(rP[k]), options: { fontFace: FONT, align: "right" } },
         { text: String(rN[k]), options: { fontFace: FONT, align: "right", bold: true } },
         { text: e.txt, options: { fontFace: FONT, align: "right", color: e.up === null ? GREY : e.up ? "2E7D32" : "C62828" } },
