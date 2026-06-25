@@ -1,4 +1,4 @@
-import { sql } from "./db";
+import { sql } from "./db.server";
 
 export async function autoMigrate() {
   console.log("[AUTO-MIGRATE] Vérification des tables AIDE...");

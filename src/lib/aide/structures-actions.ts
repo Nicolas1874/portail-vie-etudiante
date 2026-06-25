@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { sql } from "./db";
+import { sql } from "./db.server";
 
 /**
  * Récupérer toutes les structures avec leur territoire

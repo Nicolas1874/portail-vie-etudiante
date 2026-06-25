@@ -1,5 +1,5 @@
 import "./lib/error-capture";
-import { autoMigrate } from "./lib/aide/auto-migrate";
+import { autoMigrate } from "./lib/aide/auto-migrate.server";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";

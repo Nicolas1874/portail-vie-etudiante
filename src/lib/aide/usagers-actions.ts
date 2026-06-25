@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { sql } from "./db";
+import { sql } from "./db.server";
 
 /**
  * Récupérer la liste des usagers avec filtres
