@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/aide-supabase/client";
+import { getStructures, saveStructure, deleteStructure } from "@/lib/aide/structures-actions";
+import { getTerritoires } from "@/lib/aide/territoires-actions";
 import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,20 +36,23 @@ function StructuresPage() {
   const [editing, setEditing] = useState<any | null>(null);
 
   const load = async () => {
-    const [{ data: s }, { data: t }] = await Promise.all([
-      supabase.from("structures").select("*, territoires(nom)").order("nom"),
-      supabase.from("territoires").select("*").order("nom"),
+    const [sRes, tRes] = await Promise.all([
+      getStructures(),
+      getTerritoires(),
     ]);
-    setRows(s ?? []);
-    setTerritoires(t ?? []);
+    if (sRes.error) toast.error(sRes.error);
+    else setRows(sRes.data ?? []);
+    
+    if (tRes.error) toast.error(tRes.error);
+    else setTerritoires(tRes.data ?? []);
   };
   useEffect(() => {
     load();
   }, []);
 
   const remove = async (id: string, nom: string) => {
-    const { error } = await supabase.from("structures").delete().eq("id", id);
-    if (error) toast.error(error.message);
+    const res = await deleteStructure(id);
+    if (res.error) toast.error(res.error);
     else {
       toast.success(`Structure « ${nom} » supprimée`);
       load();
@@ -153,13 +157,8 @@ function EditDialog({
       telephone: f.telephone || null,
       adresse: f.adresse || null,
     };
-    if (item.id) {
-      const { error } = await supabase.from("structures").update(payload).eq("id", item.id);
-      if (error) return toast.error(error.message);
-    } else {
-      const { error } = await supabase.from("structures").insert(payload as any);
-      if (error) return toast.error(error.message);
-    }
+    const res = await saveStructure({ ...payload, id: item.id });
+    if (res.error) return toast.error(res.error);
     toast.success(item.id ? "Structure mise à jour" : "Structure créée");
     onSaved();
   };

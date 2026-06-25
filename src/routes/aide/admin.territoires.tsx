@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/aide-supabase/client";
+import { getTerritoires, saveTerritoire, deleteTerritoire } from "@/lib/aide/territoires-actions";
 import { PageHeader } from "@/components/aide/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,16 +27,17 @@ function TerritoiresPage() {
   const [editing, setEditing] = useState<any | null>(null);
 
   const load = async () => {
-    const { data } = await supabase.from("territoires").select("*").order("nom");
-    setRows(data ?? []);
+    const res = await getTerritoires();
+    if (res.error) toast.error(res.error);
+    else setRows(res.data ?? []);
   };
   useEffect(() => {
     load();
   }, []);
 
   const remove = async (id: string, nom: string) => {
-    const { error } = await supabase.from("territoires").delete().eq("id", id);
-    if (error) toast.error(error.message);
+    const res = await deleteTerritoire(id);
+    if (res.error) toast.error(res.error);
     else {
       toast.success(`Territoire « ${nom} » supprimé`);
       load();
@@ -144,13 +145,8 @@ function EditDialog({
       accueille_pij: f.accueille_pij,
       accueille_paej: f.accueille_paej,
     };
-    if (item.id) {
-      const { error } = await supabase.from("territoires").update(payload).eq("id", item.id);
-      if (error) return toast.error(error.message);
-    } else {
-      const { error } = await supabase.from("territoires").insert(payload);
-      if (error) return toast.error(error.message);
-    }
+    const res = await saveTerritoire({ ...payload, id: item.id });
+    if (res.error) return toast.error(res.error);
     toast.success(item.id ? "Territoire mis à jour" : "Territoire créé");
     onSaved();
   };

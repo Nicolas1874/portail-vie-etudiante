@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { supabase } from "@/integrations/aide-supabase/client";
+import { createUsager } from "@/lib/aide/usagers-actions";
+import { getProfileByEmail } from "@/lib/aide/auth-actions";
 import { useAuth } from "@/lib/aide/auth";
 import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -48,45 +49,38 @@ function NouveauUsager() {
 
     setLoading(true);
     
-    // On récupère le territoire_id de la structure
-    const { data: structData } = await supabase
-      .from("structures")
-      .select("territoire_id")
-      .eq("id", profile.structure_id)
-      .single();
+    // On récupère le profil complet via le serveur
+    const profRes = await getProfileByEmail(profile.email);
+    const fullProfile = profRes.data;
 
-    if (!structData?.territoire_id) {
+    if (!fullProfile?.territoire_id) {
       toast.error("Erreur de configuration", { description: "Votre structure n'est rattachée à aucun territoire." });
       setLoading(false);
       return;
     }
 
-    const { data, error } = await supabase
-      .from("usagers")
-      .insert({
-        nom: values.nom,
-        prenom: values.prenom,
-        email: values.email || null,
-        telephone: values.telephone || null,
-        genre: (values.genre as any) || null,
-        date_naissance: values.date_naissance || null,
-        type_public: (values.type_public as any) || null,
-        situation: (values.situation as any) || null,
-        cree_par: profile?.id,
-        structure_creatrice_id: profile.structure_id,
-        territoire_id: structData.territoire_id,
-      })
-      .select("id")
-      .single();
+    const res = await createUsager({
+      nom: values.nom,
+      prenom: values.prenom,
+      email: values.email || null,
+      telephone: values.telephone || null,
+      genre: (values.genre as any) || null,
+      date_naissance: values.date_naissance || null,
+      type_public: (values.type_public as any) || null,
+      situation: (values.situation as any) || null,
+      cree_par: fullProfile.id,
+      structure_creatrice_id: fullProfile.structure_id,
+      territoire_id: fullProfile.territoire_id,
+    });
 
-    if (error) {
-      console.error("[USAGER-CREATE] Erreur détaillée:", error);
+    if (res.error) {
+      console.error("[USAGER-CREATE] Erreur détaillée:", res.error);
       toast.error("Erreur lors de la création de l'usager", { 
-        description: `Code: ${error.code} - ${error.message}. Vérifiez que les tables existent dans votre base de données.` 
+        description: res.error 
       });
-    } else if (data) {
+    } else if (res.data) {
       toast.success("Usager créé avec succès !");
-      navigate({ to: "/aide/usagers/$id", params: { id: data.id } });
+      navigate({ to: "/aide/usagers/$id", params: { id: res.data.id } });
     }
     setLoading(false);
   }

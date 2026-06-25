@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/aide-supabase/client";
+import { getUsagers } from "@/lib/aide/usagers-actions";
 import { useAuth } from "@/lib/aide/auth";
 import { PageHeader } from "@/components/aide/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,11 +44,9 @@ function ListUsagers() {
 
   const refresh = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("usagers")
-      .select("id, nom, prenom, email, tel, created_at, archive, sexe, type_public, situation_familiale, date_naissance")
-      .order("created_at", { ascending: false });
-    setUsagers((data ?? []) as any);
+    const res = await getUsagers({ search });
+    if (res.error) toast.error(res.error);
+    else setUsagers((res.data ?? []) as any);
     setLoading(false);
   };
 

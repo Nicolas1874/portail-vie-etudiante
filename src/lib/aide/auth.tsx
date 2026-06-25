@@ -6,6 +6,7 @@
 // des listes vides (à brancher via /api/login → supabase.auth.signInWithPassword
 // dans une étape suivante).
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { getProfileByEmail } from "./auth-actions";
 import { supabase } from "@/integrations/aide-supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 
@@ -100,16 +101,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("storage", onStorage);
 
-    // Si on a un email portal, on cherche le profil dans le SI AIDE
+    // Si on a un email portal, on cherche le profil dans le SI AIDE via le serveur
     if (u?.email) {
-      supabase
-        .from("profiles")
-        .select("*")
-        .eq("email", u.email)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data) setAideProfile(data);
-        });
+      getProfileByEmail(u.email).then((res) => {
+        if (res.data) setAideProfile(res.data);
+      });
     }
 
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
